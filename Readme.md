@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Анастасия Лемешко](https://up.htmlacademy.ru/php-individual/1/user/2388545).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Попов](https://htmlacademy.ru/profile/id1181399).
 
 ---
 
