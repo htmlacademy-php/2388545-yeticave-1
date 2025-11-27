@@ -12,50 +12,39 @@ function format_price(int $price)
 }
 
 /**
- * Рассчитывает временной промежуток между двумя датами
+ * Рассчитывает разницу между текущим временем и указанной датой
  *
- * @param string $date Дата в фиде строки
- * @return array Массив из двух строк, [0] - часы, [1] - минуты
+ * @param string $target_date Дата/время в формате, понимаемом strtotime()
+ * @return array Массив [часы, минуты] (могут быть отрицательными)
  */
-function get_dt_range(string $date)
+function calculate_time_difference(string $target_date): array
 {
-    date_default_timezone_set('Europe/Moscow');
+    $current_timestamp = strtotime("now");
+    $target_timestamp = strtotime($target_date);
 
-    $cur_date = date_create("now");
-    $end_date = date_create($date);
-    $diff = date_diff($cur_date, $end_date);
+    if ($target_timestamp === false) {
+        throw new InvalidArgumentException('Некорректный формат даты');
+    }
 
-    $total_days = date_interval_format($diff, "%a");
-    $hours = date_interval_format($diff, "%h");
-    $minutes = date_interval_format($diff, "%i");
+    $difference = $target_timestamp - $current_timestamp;
+    $hours = (int)($difference / 3600);
+    $minutes = (int)(($difference % 3600) / 60);
 
-    $total_hours = ($total_days * 24) + $hours;
-
-    $formatted_hours = str_pad($total_hours, 2, "0", STR_PAD_LEFT);
-    $formatted_minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
-
-    return [$formatted_hours, $formatted_minutes];
+    return [$hours, $minutes];
 }
 
 /**
- * Рассчитывает временной промежуток между двумя датами
+ * Форматирует временной промежуток для отображения
  *
- * @param string $date Дата в фиде строки
- * @return array Массив из двух строк, [0] - часы, [1] - минуты
+ * @param array $time_diff Массив [часы, минуты] от calculateTimeDifference()
+ * @return array Массив из двух строк с ведущими нулями
  */
-function get_date_range(string $date)
+function format_time_difference(array $time_diff): array
 {
-    date_default_timezone_set('Europe/Moscow');
+    [$hours, $minutes] = $time_diff;
 
-    $cur_date = strtotime("now");
-    $end_date = strtotime($date);
-    $diff = $end_date - $cur_date;
-
-    $hours = floor($diff / 3600);
-    $minutes = floor(($diff - $hours * 3600) / 60);
-
-    $formatted_hours = str_pad($hours, 2, "0", STR_PAD_LEFT);
-    $formatted_minutes = str_pad($minutes, 2, "0", STR_PAD_LEFT);
+    $formatted_hours = str_pad((string)abs($hours), 2, "0", STR_PAD_LEFT);
+    $formatted_minutes = str_pad((string)abs($minutes), 2, "0", STR_PAD_LEFT);
 
     return [$formatted_hours, $formatted_minutes];
 }

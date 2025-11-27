@@ -9,7 +9,7 @@ $lots = [
         'category' => 'Доски и лыжи',
         'price' => 10999,
         'img' => 'img/lot-1.jpg',
-        'date' => '01.12.2025',
+        'date' => '01.12.2026',
     ],
     [
         'title' => 'DC Ply Mens 2016/2017 Snowboard',
@@ -23,7 +23,7 @@ $lots = [
         'category' => 'Крепления',
         'price' => 8000,
         'img' => 'img/lot-3.jpg',
-        'date' => '24.11.2025 10:51',
+        'date' => '30.12.2025 15:57',
     ],
     [
         'title' => 'Ботинки для сноуборда DC Mutiny Charocal',
@@ -44,6 +44,6 @@ $lots = [
         'category' => 'Разное',
         'price' => 5400,
         'img' => 'img/lot-6.jpg',
-        'date' => '01.01.2026',
+        'date' => '01.11.2026',
     ],
 ];

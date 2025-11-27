@@ -4,6 +4,8 @@ require('helpers.php');
 require('functions.php');
 require('data.php');
 
+date_default_timezone_set('Europe/Moscow');
+
 $page_content = include_template('main.php', [
     'categories' => $categories,
     'lots' => $lots,

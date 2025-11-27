@@ -15,7 +15,8 @@
     </div>
     <ul class="lots__list">
         <?php foreach ($lots as $lot): ?>
-            <?php $time_left = get_date_range($lot['date']) ?>
+            <?php $time_left = calculate_time_difference($lot['date']) ?>
+            <?php $formatted_time_left = format_time_difference($time_left) ?>
             <?php $timer_class = (int)$time_left[0] < 1 ? "timer--finishing" : ""; ?>
             <?php if ((int)$time_left[0] >= 0): ?>
                 <li class="lots__item lot">
@@ -34,7 +35,7 @@
                                 <?php if ((int)$time_left[0] < 0): ?>
                                     00 : 00
                                 <?php else: ?>
-                                    <?= htmlspecialchars($time_left[0]) . " : " . htmlspecialchars($time_left[1]) ?>
+                                    <?= htmlspecialchars($formatted_time_left[0]) . " : " . htmlspecialchars($formatted_time_left[1]) ?>
                                 <?php endif; ?>
                             </div>
                         </div>
