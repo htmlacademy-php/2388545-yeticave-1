@@ -23,6 +23,7 @@ CREATE TABLE users (
 CREATE TABLE lots (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   start_date DATETIME DEFAULT NOW(),
+  name VARCHAR(255),
   description VARCHAR(255),
   image VARCHAR(255),
   start_price INT UNSIGNED,
