@@ -37,7 +37,7 @@ $lots = [
         'category' => 'Одежда',
         'price' => 7500,
         'img' => 'img/lot-5.jpg',
-        'date' => '15.12.2025',
+        'date' => '01.12.2025',
     ],
     [
         'title' => 'Маска Oakley Canopy',
