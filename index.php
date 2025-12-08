@@ -3,38 +3,55 @@
 require('helpers.php');
 require('functions.php');
 require('data.php');
+require('db.php');
 
-$con = mysqli_connect("localhost", "root", "","yeticave");
+if (!$con) {
+    print("Ошибка подключения: " . mysqli_connect_error());
+} else {
+    // $lot_name = '2014 Snowboard';
+    // $lot_description = 'Сноуборд модель 2014 года';
+    // $lot_img = 'img/lot-5.jpg';
+    // $lot_start_price = 19000;
+    // $lot_end_date = '2026-08-01';
+    // $lot_step = 500;
+    // $user_id = 1;
+    // $category_id = 1;
+    // $sqlLotsInsert = 'INSERT INTO lots (name, description, img, start_price, end_date, step, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    // $stmtLots = mysqli_prepare($con, $sqlLotsInsert);
+    // mysqli_stmt_bind_param($stmtLots, 'sssisiii', $lot_name, $lot_description, $lot_img, $lot_start_price, $lot_end_date, $lot_step, $user_id, $category_id);
+    // mysqli_stmt_execute($stmtLots);
 
-// $lot_name = '2014 Snowboard';
-// $lot_description = 'Сноуборд модель 2014 года';
-// $lot_img = 'img/lot-5.jpg';
-// $lot_start_price = 19000;
-// $lot_end_date = '2026-08-01';
-// $lot_step = 500;
-// $user_id = 1;
-// $category_id = 1;
-// $sqlLotsInsert = 'INSERT INTO lots (name, description, img, start_price, end_date, step, user_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-// $stmtLots = mysqli_prepare($con, $sqlLotsInsert);
-// mysqli_stmt_bind_param($stmtLots, 'sssisiii', $lot_name, $lot_description, $lot_img, $lot_start_price, $lot_end_date, $lot_step, $user_id, $category_id);
-// mysqli_stmt_execute($stmtLots);
+    // $category_name = 'Маски';
+    // $category_slug = 'masks';
+    // $sqlCategoryInsert = 'INSERT INTO categories (name, slug) VALUES (?, ?)';
+    // $stmtCategory = mysqli_prepare($con, $sqlCategoryInsert);
+    // mysqli_stmt_bind_param($stmtCategory, 'ss', $category_name, $category_slug);
+    // mysqli_stmt_execute($stmtCategory);
 
-// $category_name = 'Маски';
-// $category_slug = 'masks';
-// $sqlCategoryInsert = 'INSERT INTO categories (name, slug) VALUES (?, ?)';
-// $stmtCategory = mysqli_prepare($con, $sqlCategoryInsert);
-// mysqli_stmt_bind_param($stmtCategory, 'ss', $category_name, $category_slug);
-// mysqli_stmt_execute($stmtCategory);
+    $sqlLots = "SELECT l.name as title, l.start_price as price, l.img, l.end_date as date, c.name as category, l.start_date "
+        . "FROM lots l "
+        . "JOIN categories c ON l.category_id = c.id "
+        . "WHERE l.end_date > NOW() "
+        . "ORDER BY l.start_date DESC "
+        . "LIMIT 6";
 
-$sqlLots = "SELECT l.name as title, l.start_price as price, l.img, l.end_date as date, c.name as category, l.start_date FROM lots l JOIN categories c ON l.category_id = c.id ORDER BY l.start_date DESC";
-$resultLots = mysqli_query($con, $sqlLots);
-$lots = mysqli_fetch_all($resultLots, MYSQLI_ASSOC);
+    $resultLots = mysqli_query($con, $sqlLots);
 
-$sqlCategories = "SELECT name, slug FROM categories";
-$resultCategories = mysqli_query($con, $sqlCategories);
-$categories = mysqli_fetch_all($resultCategories, MYSQLI_ASSOC);
+    if ($resultLots) {
+        $lots = mysqli_fetch_all($resultLots, MYSQLI_ASSOC);
+    } else {
+        print("Ошибка MySQL: " . mysqli_error($con));
+    }
 
-var_dump($lots);
+    $sqlCategories = "SELECT name, slug FROM categories";
+    $resultCategories = mysqli_query($con, $sqlCategories);
+
+    if ($resultCategories) {
+        $categories = mysqli_fetch_all($resultCategories, MYSQLI_ASSOC);
+    } else {
+        print("Ошибка MySQL: " . mysqli_error($con));
+    }
+}
 
 date_default_timezone_set('Europe/Moscow');
 
