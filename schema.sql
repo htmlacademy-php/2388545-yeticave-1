@@ -25,7 +25,7 @@ CREATE TABLE lots (
   start_date DATETIME DEFAULT NOW(),
   name VARCHAR(255),
   description VARCHAR(255),
-  image VARCHAR(255),
+  img VARCHAR(255),
   start_price INT UNSIGNED,
   end_date DATETIME DEFAULT NOW(),
   step INT UNSIGNED,
