@@ -9,3 +9,8 @@ $db = [
 
 $con = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
 mysqli_set_charset($con, charset:"utf8mb4");
+
+if (!$con) {
+    echo "Произошла ошибка подключения к БД";
+    die();
+}
