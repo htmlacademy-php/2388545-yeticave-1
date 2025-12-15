@@ -3,7 +3,7 @@
 function get_lots(mysqli $con)
 {
     $sql_lots = <<<SQL
-        SELECT l.name as title, l.start_price as price, l.img, l.end_date as date, c.name as category, l.start_date
+        SELECT l.id, l.name as title, l.start_price as price, l.img, l.end_date as date, c.name as category, l.start_date
         FROM lots l
         JOIN categories c ON l.category_id = c.id
         WHERE l.end_date > NOW()

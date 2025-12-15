@@ -14,9 +14,9 @@ INSERT INTO users (email, login, password, contact) VALUES
 INSERT INTO lots (name, description, img, start_price, end_date, step, user_id, category_id) VALUES
   ('2014 Rossignol District Snowboard', 'Сноуборд модель 2014 года', 'img/lot-1.jpg', 10999, '2026-12-01', 100, 1, 1),
   ('DC Ply Mens 2016/2017 Snowboard', 'Сноуборд в идеальном состоянии', 'img/lot-2.jpg', 159999, '2026-01-01', 200, 3, 1),
-  ('Крепления Union Contact Pro 2015 года размер L/XL', 'Лучшие крепления в своей ценовой категории', 'img/lot-3.jpg', 8000, '2025-12-30 15:57', 1000, 2, 2),
+  ('Крепления Union Contact Pro 2015 года размер L/XL', 'Лучшие крепления в своей ценовой категории', 'img/lot-3.jpg', 8000, '2026-03-30', 1000, 2, 2),
   ('Ботинки для сноуборда DC Mutiny Charocal', 'Удобные ботинки для сноуборда', 'img/lot-4.jpg', 10999, '2025-12-31', 100, 2, 3),
-  ('Куртка для сноуборда DC Mutiny Charocal', 'Мужская куртка для сноуборда размера XL', 'img/lot-5.jpg', 7500, '2025-12-01', 500, 1, 4),
+  ('Куртка для сноуборда DC Mutiny Charocal', 'Мужская куртка для сноуборда размера XL', 'img/lot-5.jpg', 7500, '2026-02-15 15:15', 500, 1, 4),
   ('Маска Oakley Canopy', 'Маска горнолыжная', 'img/lot-6.jpg', 5400, '2026-12-01', 100, 3, 6);
 
 INSERT INTO rates (date, cost, user_id, lot_id) VALUES
