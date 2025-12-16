@@ -48,3 +48,32 @@ function format_time_difference(array $time_diff): array
 
     return [$formatted_hours, $formatted_minutes];
 }
+
+/**
+ * Отображает страницу 404 Not Found
+ *
+ * Устанавливает HTTP-статус 404 и выводит HTML-страницу с сообщением об ошибке.
+ *
+ * @param array $categories Массив категорий для меню навигации
+ * @param bool $is_auth Флаг авторизации пользователя
+ * @param string $user_name Имя авторизованного пользователя (если есть)
+ * @return void Функция не возвращает значение
+ */
+function show_404(array $categories, bool $is_auth, string $user_name = ''): void
+{
+    http_response_code(404);
+
+    $page_content = include_template('404-main.php', [
+        'categories' => $categories,
+    ]);
+
+    $layout_content = include_template('layout.php', [
+        'content' => $page_content,
+        'title' => '404 - Страница не найдена',
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'categories' => $categories,
+    ]);
+
+    print($layout_content);
+}
