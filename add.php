@@ -36,34 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // создание правил валидации
 
     $rules = [
-        'category' => function () use ($form_fields) {
-            return validateCategory($form_fields['category'] ?? '');
-        },
-        'lot-rate' => function () use ($form_fields) {
-            return validatePrice($form_fields['lot-rate']);
-        },
-        'lot-step' => function () use ($form_fields) {
-            return validateRate($form_fields['lot-step']);
-        },
-        'lot-date' => function () use ($form_fields) {
-            return validateDate($form_fields['lot-date']);
-        },
+        'lot-name' => 'required',
+        'category' => 'required|select_not_default:default',
+        'message' => 'required',
+        'lot-rate' => 'required|positive_number',
+        'lot-step' => 'required|positive_number|int',
+        'lot-date' => 'required|date_format|date_after_tomorrow',
     ];
-
-    $required = ['lot-name', 'category', 'message', 'lot-rate', 'lot-step', 'lot-date'];
 
     // запись ошибок в массив
 
-    foreach ($form_fields as $key => $value) {
-        if (isset($rules[$key])) {
-            $rule = $rules[$key];
-            $errors[$key] = $rule();
-        }
-
-        if (in_array($key, $required) && empty($value)) {
-            $errors[$key] = "Поле необходимо заполнить";
-        }
-    }
+    $errors = validate($form_fields, $rules, $con);
 
     // проверка загруженного файла
 
