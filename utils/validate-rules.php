@@ -136,6 +136,10 @@ function validate_select_not_default(string $field_name, mixed $value, array $fo
  */
 function validate_positive_number(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
+    if ($value === null) {
+        return null;
+    }
+
     if (!is_numeric($value) || $value <= 0) {
         return "Значение должно быть больше 0";
     }
@@ -155,10 +159,35 @@ function validate_positive_number(string $field_name, mixed $value, array $form_
  */
 function validate_int(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
-    $is_rate_correct = filter_var($value, FILTER_VALIDATE_INT);
+    if ($value === null) {
+        return null;
+    }
 
-    if ($is_rate_correct === false) {
+    if (filter_var($value, FILTER_VALIDATE_INT) === false) {
         return "Значение не может быть дробным";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет, что значение является строкой
+ *
+ * @param string $field_name название поля
+ * @param mixed $value значение поля
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_string(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+{
+    if ($value === null) {
+        return null;
+    }
+
+    if (!is_string($value)) {
+        return "Некорректный тип данных";
     }
 
     return null;
@@ -176,6 +205,10 @@ function validate_int(string $field_name, mixed $value, array $form_fields, mysq
  */
 function validate_date_format(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
+    if ($value === null) {
+        return null;
+    }
+
     $is_correct_date_format = is_date_valid($value);
 
     if ($is_correct_date_format === false) {
@@ -197,11 +230,79 @@ function validate_date_format(string $field_name, mixed $value, array $form_fiel
  */
 function validate_date_after_tomorrow(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
+    if ($value === null) {
+        return null;
+    }
+
     $input_timestamp = new DateTime($value);
     $tomorrow_timestamp = new DateTime('tomorrow');
 
     if ($input_timestamp < $tomorrow_timestamp) {
         return "Дата должна быть больше текущей хотя бы на 1 день";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет наличие изображения
+ *
+ * @param string $field_name название поля
+ * @param mixed $value структура файла с изображением
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_required_img(string $field_name, mixed $uploaded_file, array $form_fields, mysqli $con, ...$args): ?string
+{
+    if (empty($uploaded_file['name'])) {
+        return "Загрузите изображение";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет формат изображения
+ *
+ * @param string $field_name название поля
+ * @param mixed $uploaded_file структура файла с изображением
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_img_format(string $field_name, mixed $uploaded_file, array $form_fields, mysqli $con, ...$args): ?string
+{
+    if (empty($uploaded_file)) {
+        return null;
+    }
+
+    $tmp_name = $uploaded_file['tmp_name'];
+    $original_name = $uploaded_file['name'];
+
+    $ext = pathinfo($original_name, PATHINFO_EXTENSION);
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_file($finfo, $tmp_name);
+
+    $allowed_mime_types = [];
+
+    foreach ($args as $arg) {
+        $allowed_mime_types[] = "image/" . $arg;
+    }
+
+    if (empty($allowed_mime_types)) {
+        die("Не указаны допустимые форматы изображения");
+    }
+
+    if (!in_array($file_type, $allowed_mime_types)) {
+        $errors['lot-img'] = "Загрузите картинку в формате .png, .jpg или .jpeg";
+    } else {
+        $filename = uniqid() . '.' . $ext;
+        move_uploaded_file($tmp_name, 'uploads/' . $filename);
+        $uploaded_file = $filename;
     }
 
     return null;

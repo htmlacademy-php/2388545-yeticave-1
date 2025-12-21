@@ -31,45 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $add_empty = true
     );
 
-    $uploaded_file = $_FILES['lot-img'];
+    $uploaded_file = $_FILES['lot-img'] ?? [];
+
+    $form_fields['lot-img'] = $uploaded_file;
 
     // создание правил валидации
 
     $rules = [
-        'lot-name' => 'required',
-        'category' => 'required|select_not_default:default',
-        'message' => 'required',
+        'lot-name' => 'required|string',
+        'category' => 'required|string|select_not_default:default',
+        'message' => 'required|string',
         'lot-rate' => 'required|positive_number',
         'lot-step' => 'required|positive_number|int',
         'lot-date' => 'required|date_format|date_after_tomorrow',
+        'lot-img' => 'required_img|img_format:jpg,jpeg,png'
     ];
 
     // запись ошибок в массив
 
     $errors = validate($form_fields, $rules, $con);
-
-    // проверка загруженного файла
-
-    if (!empty($uploaded_file['name'])) {
-        $tmp_name = $_FILES['lot-img']['tmp_name'];
-        $original_name = $_FILES['lot-img']['name'];
-
-        $ext = pathinfo($original_name, PATHINFO_EXTENSION);
-        $allowed = ['jpg', 'jpeg', 'png'];
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-
-        if (!in_array(strtolower($ext), $allowed)) {
-            $errors['lot-img'] = "Загрузите картинку в формате .png, .jpg или .jpeg";
-        } else {
-            $filename = uniqid() . '.' . $ext;
-            move_uploaded_file($tmp_name, 'uploads/' . $filename);
-            $uploaded_file = $filename;
-        }
-    } else {
-        $errors['lot-img'] = "Загрузите изображение";
-    }
 
     $errors = array_filter($errors);
 }
