@@ -28,8 +28,6 @@ function get_lot(mysqli $con, int $lot_id)
 
 function add_lot(mysqli $con, array $form_fields)
 {
-    var_dump($form_fields['lot-img']);
-
     $lot_name = $form_fields['lot-name'];
     $lot_description = $form_fields['message'];
     $lot_img = $form_fields['lot-img']['img_path'];

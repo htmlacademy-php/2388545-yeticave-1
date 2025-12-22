@@ -604,6 +604,7 @@ main.container {
 .lot__image img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .lot__info {
@@ -959,6 +960,7 @@ input:invalid .form__error{
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  object-fit: contain;
 }
 
 .lot-item__category {

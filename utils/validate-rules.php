@@ -280,9 +280,6 @@ function validate_img_format(string $field_name, mixed $uploaded_file, array $fo
     }
 
     $tmp_name = $uploaded_file['tmp_name'];
-    $original_name = $uploaded_file['name'];
-
-    $ext = pathinfo($original_name, PATHINFO_EXTENSION);
 
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $file_type = finfo_file($finfo, $tmp_name);
@@ -299,12 +296,6 @@ function validate_img_format(string $field_name, mixed $uploaded_file, array $fo
 
     if (!in_array($file_type, $allowed_mime_types)) {
         return "Загрузите картинку в формате .png, .jpg или .jpeg";
-    } else {
-        $filename = uniqid() . '.' . $ext;
-        $img_path = 'uploads/' . $filename;
-        move_uploaded_file($tmp_name, $img_path);
-        $form_fields[$field_name]['img_path'] = $img_path;
-        var_dump($form_fields[$field_name]);
     }
 
     return null;
