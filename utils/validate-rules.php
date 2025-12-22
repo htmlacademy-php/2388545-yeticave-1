@@ -275,7 +275,7 @@ function validate_required_img(string $field_name, mixed $uploaded_file, array $
  */
 function validate_img_format(string $field_name, mixed $uploaded_file, array $form_fields, mysqli $con, ...$args): ?string
 {
-    if (empty($uploaded_file)) {
+    if (empty($uploaded_file['name'])) {
         return null;
     }
 
@@ -298,11 +298,13 @@ function validate_img_format(string $field_name, mixed $uploaded_file, array $fo
     }
 
     if (!in_array($file_type, $allowed_mime_types)) {
-        $errors['lot-img'] = "Загрузите картинку в формате .png, .jpg или .jpeg";
+        return "Загрузите картинку в формате .png, .jpg или .jpeg";
     } else {
         $filename = uniqid() . '.' . $ext;
-        move_uploaded_file($tmp_name, 'uploads/' . $filename);
-        $uploaded_file = $filename;
+        $img_path = 'uploads/' . $filename;
+        move_uploaded_file($tmp_name, $img_path);
+        $form_fields[$field_name]['img_path'] = $img_path;
+        var_dump($form_fields[$field_name]);
     }
 
     return null;

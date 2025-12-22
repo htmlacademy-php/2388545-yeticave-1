@@ -5,12 +5,14 @@ require_once('./utils/functions.php');
 require_once('./utils/data.php');
 require_once('./utils/db.php');
 require_once('./repository/sql-categories.php');
+require_once('./repository/sql-lot.php');
 require_once('./utils/validate-rules.php');
 
 $categories = get_categories($con);
 $errors = [];
 $form_fields = [];
 $uploaded_file = [];
+$is_form_send = false;
 
 // проверка отправки формы
 
@@ -50,24 +52,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // запись ошибок в массив
 
     $errors = validate($form_fields, $rules, $con);
-
-    $errors = array_filter($errors);
+    $is_form_send = true;
 }
 
 // отрисовка страницы
 
-$page_content = include_template('add-main.php', [
-    'categories' => $categories,
-    'errors' => $errors,
-    'form_fields' => $form_fields,
-]);
+if (!$is_form_send || $errors !== null) {
+    $page_content = include_template('add-main.php', [
+        'categories' => $categories,
+        'errors' => $errors,
+        'form_fields' => $form_fields,
+    ]);
 
-$layout_content = include_template('layout.php', [
-    'content' => $page_content,
-    'title' => 'Добавление лота',
-    'is_auth' => $is_auth,
-    'user_name' => $user_name,
-    'categories' => $categories,
-]);
+    $layout_content = include_template('layout.php', [
+        'content' => $page_content,
+        'title' => 'Добавление лота',
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'categories' => $categories,
+    ]);
 
-print($layout_content);
+    print($layout_content);
+} else {
+    $new_lot_id = add_lot($con, $form_fields);
+
+    header("Location: /lot.php?id=" . $new_lot_id);
+    exit();
+}

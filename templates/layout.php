@@ -21,7 +21,9 @@
                     <input type="search" name="search" placeholder="Поиск лота">
                     <input class="main-header__search-btn" type="submit" name="find" value="Найти">
                 </form>
-                <a class="main-header__add-lot button" href="./../add.php">Добавить лот</a>
+                <?php if (htmlspecialchars($is_auth)): ?>
+                    <a class="main-header__add-lot button" href="./../add.php">Добавить лот</a>
+                <?php endif; ?>
 
                 <nav class="user-menu">
 
@@ -98,7 +100,9 @@
                     </svg>
                 </a>
             </div>
-            <a class="main-footer__add-lot button" href="add-lot.html">Добавить лот</a>
+            <?php if (htmlspecialchars($is_auth)): ?>
+                <a class="main-footer__add-lot button" href="./../add.php">Добавить лот</a>
+            <?php endif; ?>
             <div class="main-footer__developed-by">
                 <span class="visually-hidden">Разработано:</span>
                 <a class="logo-academy" href="https://htmlacademy.ru/intensive/php">

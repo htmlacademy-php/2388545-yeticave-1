@@ -20,7 +20,7 @@
             <select id="category" name="category">
                 <option value="default">Выберите категорию</option>
                 <?php foreach ($categories as $category): ?>
-                    <option value="<?= htmlspecialchars($category['name']) ?>" <?= ($form_fields['category'] ?? '') === $category['name'] ? 'selected' : '' ?>>
+                    <option value="<?= htmlspecialchars($category['slug']) ?>" <?= ($form_fields['category'] ?? '') === $category['slug'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($category['name']) ?>
                     </option>
                 <?php endforeach; ?>
