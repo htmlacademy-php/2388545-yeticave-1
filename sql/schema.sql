@@ -16,7 +16,7 @@ CREATE TABLE users (
   date_registration DATETIME DEFAULT NOW(),
   email VARCHAR(128) NOT NULL UNIQUE,
   login VARCHAR(255) NOT NULL UNIQUE,
-  password CHAR(64) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   contact VARCHAR(255)
 );
 
