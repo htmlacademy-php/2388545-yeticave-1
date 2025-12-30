@@ -1,5 +1,7 @@
 <?php
 
+require_once('./repository/sql-templates.php');
+
 /**
  * Константа, определяющая разделитель для правил
  */
@@ -14,6 +16,13 @@ const PARAMETERES_DELIMITER = ":";
  * Константа, отделяющая параметры друг от друга
  */
 const PARAMETERES_SPLIT_DELIMITER = ",";
+
+/**
+ * Текст ошибок для уникальных полей
+ */
+const UNIQUE_ERROR_DESCRIPTIONS = [
+    'email' => 'Пользователь с таким e-mail уже существует',
+];
 
 /**
  * Преобразует правила к массиву правил
@@ -112,6 +121,7 @@ function validate_required(string $field_name, mixed $value, array $form_fields,
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
+ * @param string $default_value значение по умолчанию
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
@@ -296,6 +306,88 @@ function validate_img_format(string $field_name, mixed $uploaded_file, array $fo
 
     if (!in_array($file_type, $allowed_mime_types)) {
         return "Загрузите картинку в формате .png, .jpg или .jpeg";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет формат email
+ *
+ * @param string $field_name название поля
+ * @param mixed $value значение поля
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_email(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+{
+    if ($value === null) {
+        return null;
+    }
+
+    if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+        return "Некорректный формат email";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет минимальную длину строки
+ *
+ * @param string $field_name название поля
+ * @param mixed $value значение поля
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param string $min_length минимальная длина строки
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_min(string $field_name, mixed $value, array $form_fields, mysqli $con, string $min_length, ...$args): ?string
+{
+    if ($value === null) {
+        return null;
+    }
+
+    if (!is_string($value)) {
+        return "Некорректный тип данных";
+    }
+
+    if (strlen($value) < $min_length) {
+        return "Введите минимум $min_length символов";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет уникальность значения
+ *
+ * @param string $field_name название поля
+ * @param mixed $value значение поля
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param string $table_name название таблицы, содержащей проверяемое значение
+ * @param string $column_name название поля, содержащее проверяемое значение
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_unique(string $field_name, mixed $value, array $form_fields, mysqli $con, string $table_name, string $column_name, ...$args): ?string
+{
+    if ($value === null) {
+        return null;
+    }
+
+    $existing_value = get_existing_data($con, $value, $table_name, $column_name);
+
+    if ($existing_value !== null) {
+        if (isset(UNIQUE_ERROR_DESCRIPTIONS[$column_name])) {
+            return UNIQUE_ERROR_DESCRIPTIONS[$column_name];
+        }
+
+        return "Значение не является уникальным";
     }
 
     return null;
