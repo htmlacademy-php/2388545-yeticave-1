@@ -7,12 +7,18 @@ require_once('./utils/db.php');
 require_once('./repository/sql-categories.php');
 require_once('./repository/sql-lot.php');
 require_once('./utils/validate-rules.php');
+require_once('./utils/init-session.php');
 
 $categories = get_categories($con);
 $errors = [];
 $form_fields = [];
 $uploaded_file = [];
 $is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
+
+if (!isset($_SESSION['username'])) {
+    http_response_code(403);
+    exit();
+}
 
 // проверка отправки формы
 
