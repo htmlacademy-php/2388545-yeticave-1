@@ -49,6 +49,8 @@ CREATE TABLE lots (
     ON UPDATE CASCADE
 );
 
+CREATE FULLTEXT INDEX lot_ft_search ON lots(name, description);
+
 CREATE TABLE rates (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   date DATETIME DEFAULT NOW(),

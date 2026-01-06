@@ -1,5 +1,3 @@
-<?php require_once('./utils/init-session.php') ?>
-
 <nav class="nav">
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
@@ -23,7 +21,7 @@
             <p class="lot-item__description"><?= htmlspecialchars($lot['description']) ?></p>
         </div>
         <div class="lot-item__right">
-            <?php if (isset($_SESSION['username'])): ?>
+            <?php if ($is_auth): ?>
                 <div class="lot-item__state">
                     <div class="lot-item__timer timer <?= htmlspecialchars($timer_class) ?>">
                         <?php if ((int)$time_left[0] < 0): ?>
