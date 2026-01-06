@@ -10,16 +10,12 @@ require_once('./utils/validate-rules.php');
 require_once('./utils/init-session.php');
 
 $categories = get_categories($con);
-$errors = [];
-$form_fields = [];
-$is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
 $is_auth = isset($_SESSION['username']);
 $user_name = $_SESSION['username'] ?? null;
 
-if (isset($_SESSION['username'])) {
-    http_response_code(403);
-    exit();
-}
+$errors = [];
+$form_fields = [];
+$is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
 
 // проверка отправки формы
 
@@ -32,8 +28,6 @@ if ($is_form_send) {
         [
             'email' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
             'password' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-            'name' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-            'message' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
         ],
         $add_empty = true
     );
@@ -41,10 +35,8 @@ if ($is_form_send) {
     // создание правил валидации
 
     $rules = [
-        'email' => 'required|string|email|unique:users,email',
-        'password' => 'required|string|min:5',
-        'name' => 'required|string',
-        'message' => 'required|string',
+        'email' => 'required|string|email|exist:users,email',
+        'password' => 'required|string|password',
     ];
 
     // запись ошибок в массив
@@ -55,7 +47,7 @@ if ($is_form_send) {
 // отрисовка страницы
 
 if (!$is_form_send || $errors !== null) {
-    $page_content = include_template('register-main.php', [
+    $page_content = include_template('login-main.php', [
         'categories' => $categories,
         'errors' => $errors,
         'form_fields' => $form_fields,
@@ -63,7 +55,7 @@ if (!$is_form_send || $errors !== null) {
 
     $layout_content = include_template('layout.php', [
         'content' => $page_content,
-        'title' => 'Регистрация',
+        'title' => 'Вход',
         'is_auth' => $is_auth,
         'user_name' => $user_name,
         'categories' => $categories,
@@ -72,9 +64,12 @@ if (!$is_form_send || $errors !== null) {
     print($layout_content);
 
     exit();
-}
+};
 
-add_user($con, $form_fields);
+$user_data = get_existing_data($con, $form_fields['email'], 'users', 'email');
 
-header("Location: /login.php");
+$_SESSION['username'] = $user_data['login'];
+$_SESSION['user_id'] = $user_data['id'];
+
+header("Location: /");
 exit();

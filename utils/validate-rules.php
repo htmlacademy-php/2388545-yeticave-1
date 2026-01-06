@@ -25,6 +25,13 @@ const UNIQUE_ERROR_DESCRIPTIONS = [
 ];
 
 /**
+ * Текст ошибок для существующих полей
+ */
+const EXIST_ERROR_DESCRIPTIONS = [
+    'email' => 'Пользователь с таким e-mail не зарегистрирован',
+];
+
+/**
  * Преобразует правила к массиву правил
  *
  * @param array $rules массив полей и правил ['name' => 'validate|min:10']
@@ -388,6 +395,71 @@ function validate_unique(string $field_name, mixed $value, array $form_fields, m
         }
 
         return "Значение не является уникальным";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет уникальность значения
+ *
+ * @param string $field_name название поля
+ * @param mixed $value значение поля
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param string $table_name название таблицы, содержащей проверяемое значение
+ * @param string $column_name название поля, содержащее проверяемое значение
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_exist(string $field_name, mixed $value, array $form_fields, mysqli $con, string $table_name, string $column_name, ...$args): ?string
+{
+    if ($value === null) {
+        return null;
+    }
+
+    $existing_value = get_existing_data($con, $value, $table_name, $column_name);
+
+    if ($existing_value === null) {
+        if (isset(EXIST_ERROR_DESCRIPTIONS[$column_name])) {
+            return EXIST_ERROR_DESCRIPTIONS[$column_name];
+        }
+
+        return "Значение не найдено";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет совпадение пароля
+ *
+ * @param string $field_name название поля
+ * @param mixed $value значение поля
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param string $table_name название таблицы, содержащей проверяемое значение
+ * @param string $column_name название поля, содержащее проверяемое значение
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_password(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+{
+    if ($value === null) {
+        return null;
+    }
+
+    $user_email = $form_fields['email'];
+
+    $user_data = get_existing_data($con, $user_email, 'users', 'email');
+
+    // если пользователя нет, ошибка падает в поле имя
+    if ($user_data === null) {
+        return null;
+    }
+
+    if (!password_verify($value, $user_data['password'])) {
+        return "Вы ввели неверный пароль";
     }
 
     return null;

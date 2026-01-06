@@ -8,8 +8,11 @@ require_once('./utils/data.php');
 require_once('./utils/db.php');
 require_once('./repository/sql-lot.php');
 require_once('./repository/sql-categories.php');
+require_once('./utils/init-session.php');
 
 $categories = get_categories($con);
+$is_auth = isset($_SESSION['username']);
+$user_name = $_SESSION['username'] ?? null;
 
 // проверка существования параметра запроса с id лота
 
@@ -46,4 +49,3 @@ $layout_content = include_template('layout.php', [
 ]);
 
 print($layout_content);
-

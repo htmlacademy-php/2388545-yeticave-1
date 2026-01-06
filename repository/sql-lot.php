@@ -1,6 +1,7 @@
 <?php
 
 require_once('./repository/sql-categories.php');
+require_once('./utils/init-session.php');
 
 function get_lot(mysqli $con, int $lot_id)
 {
@@ -26,7 +27,7 @@ function get_lot(mysqli $con, int $lot_id)
     return $lot;
 }
 
-function add_lot(mysqli $con, array $form_fields)
+function add_lot(mysqli $con, array $form_fields, $user_id)
 {
     $lot_name = $form_fields['lot-name'];
     $lot_description = $form_fields['message'];
@@ -34,7 +35,6 @@ function add_lot(mysqli $con, array $form_fields)
     $lot_start_price = $form_fields['lot-rate'];
     $lot_end_date = $form_fields['lot-date'];
     $lot_step = $form_fields['lot-step'];
-    $user_id = 1;
     $category_id = find_category_by_slug($con, $form_fields['category']);
 
     $sql_lots_insert = <<<SQL
