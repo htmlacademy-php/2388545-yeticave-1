@@ -16,6 +16,8 @@ $is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
 $is_auth = isset($_SESSION['username']);
 $user_name = $_SESSION['username'] ?? null;
 
+// закрывает доступ к странице для авторизованных пользователей
+
 if (isset($_SESSION['username'])) {
     http_response_code(403);
     exit();
