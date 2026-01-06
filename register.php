@@ -13,6 +13,8 @@ $categories = get_categories($con);
 $errors = [];
 $form_fields = [];
 $is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
+$is_auth = isset($_SESSION['username']);
+$user_name = $_SESSION['username'] ?? null;
 
 if (isset($_SESSION['username'])) {
     http_response_code(403);
@@ -70,7 +72,7 @@ if (!$is_form_send || $errors !== null) {
     print($layout_content);
 
     exit();
-};
+}
 
 add_user($con, $form_fields);
 

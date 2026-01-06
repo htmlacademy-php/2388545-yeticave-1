@@ -27,20 +27,14 @@ function get_lot(mysqli $con, int $lot_id)
     return $lot;
 }
 
-function add_lot(mysqli $con, array $form_fields)
+function add_lot(mysqli $con, array $form_fields, $user_id)
 {
-    if (!isset($_SESSION['username'])) {
-        http_response_code(403);
-        exit();
-    }
-
     $lot_name = $form_fields['lot-name'];
     $lot_description = $form_fields['message'];
     $lot_img = $form_fields['lot-img']['img_path'];
     $lot_start_price = $form_fields['lot-rate'];
     $lot_end_date = $form_fields['lot-date'];
     $lot_step = $form_fields['lot-step'];
-    $user_id = $_SESSION['user_id'];
     $category_id = find_category_by_slug($con, $form_fields['category']);
 
     $sql_lots_insert = <<<SQL

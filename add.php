@@ -10,6 +10,9 @@ require_once('./utils/validate-rules.php');
 require_once('./utils/init-session.php');
 
 $categories = get_categories($con);
+$is_auth = isset($_SESSION['username']);
+$user_name = $_SESSION['username'] ?? null;
+
 $errors = [];
 $form_fields = [];
 $uploaded_file = [];
@@ -96,7 +99,7 @@ if (!$is_form_send || $errors !== null) {
     exit();
 }
 
-$new_lot_id = add_lot($con, $form_fields);
+$new_lot_id = add_lot($con, $form_fields, $_SESSION['user_id']);
 
 header("Location: /lot.php?id=" . $new_lot_id);
 exit();

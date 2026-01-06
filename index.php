@@ -8,9 +8,12 @@ require_once('./utils/data.php');
 require_once('./utils/db.php');
 require_once('./repository/sql-lots.php');
 require_once('./repository/sql-categories.php');
+require_once('./utils/init-session.php');
 
 $lots = get_lots($con);
 $categories = get_categories($con);
+$is_auth = isset($_SESSION['username']);
+$user_name = $_SESSION['username'] ?? null;
 
 $page_content = include_template('main.php', [
     'categories' => $categories,

@@ -10,6 +10,9 @@ require_once('./utils/validate-rules.php');
 require_once('./utils/init-session.php');
 
 $categories = get_categories($con);
+$is_auth = isset($_SESSION['username']);
+$user_name = $_SESSION['username'] ?? null;
+
 $errors = [];
 $form_fields = [];
 $is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
