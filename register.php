@@ -44,7 +44,7 @@ if ($is_form_send) {
 
     $rules = [
         'email' => 'required|string|email|unique:users,email',
-        'password' => 'required|string|min:5',
+        'password' => 'required|string|min_length:5',
         'name' => 'required|string',
         'message' => 'required|string',
     ];

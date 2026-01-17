@@ -6,7 +6,7 @@ require_once('./utils/init-session.php');
 function get_lot(mysqli $con, int $lot_id)
 {
     $sql_lot = <<<SQL
-        SELECT l.id, l.name as title, l.start_price as price, l.img, l.description, l.end_date as date, c.name as category
+        SELECT l.id, l.name as title, l.start_price as price, l.step, l.img, l.description, l.end_date as date, c.name as category
         FROM lots l
         JOIN categories c ON l.category_id = c.id
         WHERE l.id = ?

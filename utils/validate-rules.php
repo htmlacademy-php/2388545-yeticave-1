@@ -352,7 +352,7 @@ function validate_email(string $field_name, mixed $value, array $form_fields, my
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_min(string $field_name, mixed $value, array $form_fields, mysqli $con, string $min_length, ...$args): ?string
+function validate_min_length(string $field_name, mixed $value, array $form_fields, mysqli $con, string $min_length, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -364,6 +364,32 @@ function validate_min(string $field_name, mixed $value, array $form_fields, mysq
 
     if (strlen($value) < $min_length) {
         return "Введите минимум $min_length символов";
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет минимальное значение числа
+ *
+ * @param string $field_name название поля
+ * @param mixed $value значение поля
+ * @param array $form_fields массив полей формы
+ * @param mysqli $con sql connection
+ * @param int $min_value минимальное значение
+ * @param [type] ...$args прочие параметры
+ * @return string|null текст ошибки либо null
+ */
+function validate_min_int(string $field_name, mixed $value, array $form_fields, mysqli $con, int $min_value, ...$args): ?string
+{
+    if ($value === null) {
+        return null;
+    }
+
+    $value = (int)$value;
+
+    if ($value < $min_value) {
+        return "Минимальное значение $min_value";
     }
 
     return null;

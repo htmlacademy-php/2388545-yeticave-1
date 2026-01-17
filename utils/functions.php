@@ -77,3 +77,30 @@ function show_404(array $categories, bool $is_auth, string $user_name = ''): voi
 
     print($layout_content);
 }
+
+/**
+ * Возвращает отформатированный промежуток от переданной прошедшей даты до текущего времени
+ *
+ * @param string $date прошедшая дата
+ * @return string отформатированный промужеток времени
+ */
+function calculate_past_date(string $date): string
+{
+    $time_left = calculate_time_difference($date);
+    $hours = abs($time_left[0]);
+    $minutes = abs($time_left[1]);
+
+    if ($hours < 1) {
+        if ($minutes < 1) {
+            return "менее минуты назад";
+        }
+        return "{$minutes} " . get_noun_plural_form($minutes, 'минута', 'минуты', 'минут') . " назад";
+    }
+
+    if ($hours < 24) {
+        return "{$hours} " . get_noun_plural_form($hours, 'час', 'часа', 'часов') . " назад";
+    }
+
+    $timestamp_date = strtotime($date);
+    return date('d.m.y \в H:i', $timestamp_date);
+}
