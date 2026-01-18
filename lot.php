@@ -49,7 +49,8 @@ $rate_history = get_all_rates($con, $lot_id);
 $current_price = $lot['price'];
 
 if (count($rate_history)) {
-   $current_price = $rate_history[0]['cost'];
+    $index = array_key_first($rate_history);
+    $current_price = $rate_history[$index]['cost'] ?? $lot['price'];
 }
 
 // вычисление минимальной ставки
@@ -86,7 +87,8 @@ if ($is_form_send) {
     if ($errors === NULL) {
         add_rate($con, $form_fields, $user_id, $lot_id);
         $rate_history = get_all_rates($con, $lot_id);
-        $current_price = $rate_history[0]['cost'];
+        $index = array_key_first($rate_history);
+        $current_price = $rate_history[$index]['cost'] ?? $lot['price'];
         $min_rate = $current_price + $price_step;
     }
 }
