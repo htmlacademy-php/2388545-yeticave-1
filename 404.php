@@ -4,7 +4,6 @@ date_default_timezone_set('Europe/Moscow');
 
 require_once('./utils/helpers.php');
 require_once('./utils/functions.php');
-require_once('./utils/data.php');
 require_once('./utils/db.php');
 require_once('./repository/sql-categories.php');
 require_once('./utils/init-session.php');
