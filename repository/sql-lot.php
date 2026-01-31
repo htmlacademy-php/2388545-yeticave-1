@@ -49,3 +49,15 @@ function add_lot(mysqli $con, array $form_fields, $user_id)
 
     return $new_lot_id;
 }
+
+function add_winner_into_lot(mysqli $con, int $lot_id, int $user_id)
+{
+    $sql_lots_update = <<<SQL
+        UPDATE lots
+        SET winner_id = ?
+        WHERE id = ?
+    SQL;
+
+    $stmt_lot = db_get_prepare_stmt($con, $sql_lots_update, [$user_id, $lot_id]);
+    mysqli_stmt_execute($stmt_lot);
+}

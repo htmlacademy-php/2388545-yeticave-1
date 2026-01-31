@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * Возвращает 6 последних активных лотов для главной страницы
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ *
+ * @return array Массив лотов в формате ассоциативных массивов.
+ *               Каждый лот содержит поля:
+ *               - id (int) - идентификатор лота
+ *               - title (string) - название лота
+ *               - price (int|float) - начальная цена
+ *               - img (string) - путь к изображению
+ *               - date (string) - дата окончания торгов
+ *               - category (string) - название категории
+ *               - start_date (string) - дата создания лота
+ */
 function get_lots(mysqli $con)
 {
     $sql_lots = <<<SQL
@@ -48,4 +63,24 @@ function search_lots(mysqli $con, string $search_string)
     $found_lots = mysqli_fetch_all($result_lots, MYSQLI_ASSOC);
 
     return $found_lots;
+}
+
+function get_expired_lots(mysqli $con)
+{
+    $sql_lots = <<<SQL
+        SELECT id, name
+        FROM lots
+        WHERE end_date <= NOW() AND winner_id is NULL
+    SQL;
+
+    $result_lots = mysqli_query($con, $sql_lots);
+
+    if (!$result_lots) {
+        echo "Произошла ошибка MySQL";
+        die();
+    }
+
+    $lots = mysqli_fetch_all($result_lots, MYSQLI_ASSOC);
+
+    return $lots;
 }
