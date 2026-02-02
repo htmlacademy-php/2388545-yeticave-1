@@ -1,9 +1,19 @@
 <?php
 
-function get_categories(mysqli $con)
+/**
+ * Получает список всех категорий лотов
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @return array<int, array{
+ *     id: int,
+ *     name: string,
+ *     slug: string
+ * }>
+ */
+function get_categories(mysqli $con): array
 {
     $sql_categories = <<<SQL
-        SELECT name, slug
+        SELECT id, name, slug
         FROM categories
     SQL;
 
@@ -19,7 +29,15 @@ function get_categories(mysqli $con)
     return $categories;
 }
 
-function find_category_by_slug(mysqli $con, string $slug)
+/**
+ * Находит id категории по её slug
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param string $slug идентификатор категории
+ *
+ * @return int|null id категории или null, если категория не найдена
+ */
+function find_category_by_slug(mysqli $con, string $slug): ?int
 {
     $sql_category_id = <<<SQL
         SELECT id

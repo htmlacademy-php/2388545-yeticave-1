@@ -1,0 +1,17 @@
+{
+    "name": "my/yeticave",
+    "autoload": {
+        "psr-4": {
+            "My\\Yeticave\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Анастасия Лемешко",
+            "email": "an.zaschepenkova@yandex.ru"
+        }
+    ],
+    "require": {
+        "symfony/mailer": "^7.4"
+    }
+}

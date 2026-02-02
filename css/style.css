@@ -746,6 +746,12 @@ main.container {
   color: #25434e;
 }
 
+.pagination-item-disabled a,
+.pagination-item-disabled a:hover,
+.pagination-item-disabled a:active {
+  color: #bbbbbb;
+}
+
 /* Форма Регистрация + Добавление лота */
 
 .form {
@@ -847,7 +853,7 @@ main.container {
   color: #f84646;
 }
 
-input:invalid .form__error{
+input:invalid .form__error {
   display: block;
 }
 
@@ -894,7 +900,8 @@ input:invalid .form__error{
   box-sizing: border-box;
 }
 
-.form__input-file input:active, .form__input-file input:focus {
+.form__input-file input:active,
+.form__input-file input:focus {
   outline: none;
   border-color: #fff;
 }
@@ -1168,6 +1175,7 @@ input:invalid .form__error{
 .rates__img img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .rates__title {

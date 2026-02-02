@@ -3,7 +3,24 @@
 require_once('./repository/sql-categories.php');
 require_once('./utils/init-session.php');
 
-function get_lot(mysqli $con, int $lot_id)
+/**
+ * Получает информацию о конкретном лоте по его id
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param int $lot_id id лота
+ *
+ * @return array{
+ *     id: int,
+ *     title: string,
+ *     price: int,
+ *     step: int,
+ *     img: string,
+ *     description: string,
+ *     date: string,
+ *     category: string
+ * }|null Ассоциативный массив с данными лота или null, если лот не найден
+ */
+function get_lot(mysqli $con, int $lot_id): ?array
 {
     $sql_lot = <<<SQL
         SELECT l.id, l.name as title, l.start_price as price, l.step, l.img, l.description, l.end_date as date, c.name as category
@@ -27,7 +44,16 @@ function get_lot(mysqli $con, int $lot_id)
     return $lot;
 }
 
-function add_lot(mysqli $con, array $form_fields, $user_id)
+/**
+ * Добавляет новый лот в базу данных
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param array $form_fields Данные формы добавления лота
+ * @param int $user_id id пользователя, добавляющего лот
+ *
+ * @return int id созданного лота
+ */
+function add_lot(mysqli $con, array $form_fields, $user_id): int
 {
     $lot_name = $form_fields['lot-name'];
     $lot_description = $form_fields['message'];
@@ -48,4 +74,25 @@ function add_lot(mysqli $con, array $form_fields, $user_id)
     $new_lot_id = mysqli_insert_id($con);
 
     return $new_lot_id;
+}
+
+/**
+ * Записывает победителя в лот
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param int $lot_id id лота
+ * @param int $user_id id победителя
+ *
+ * @return void
+ */
+function add_winner_into_lot(mysqli $con, int $lot_id, int $user_id): void
+{
+    $sql_lots_update = <<<SQL
+        UPDATE lots
+        SET winner_id = ?
+        WHERE id = ?
+    SQL;
+
+    $stmt_lot = db_get_prepare_stmt($con, $sql_lots_update, [$user_id, $lot_id]);
+    mysqli_stmt_execute($stmt_lot);
 }

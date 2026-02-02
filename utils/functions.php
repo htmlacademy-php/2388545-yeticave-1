@@ -6,7 +6,7 @@
  * @param int $price Цена в виде числа
  * @return string Отформатированная цена
  */
-function format_price(int $price)
+function format_price(int $price): string
 {
     return number_format($price, 0, ',', ' ') . ' ₽';
 }
@@ -103,4 +103,23 @@ function calculate_past_date(string $date): string
 
     $timestamp_date = strtotime($date);
     return date('d.m.y \в H:i', $timestamp_date);
+}
+
+/**
+ * Вычисляет количество страниц для пагинации
+ *
+ * @param int $lots_count Общее количество лотов
+ * @param int $per_page Количество лотов на странице
+ *
+ * @return int Количество страниц
+ * @throws RuntimeException Если количество лотов на странице отрицательное
+ */
+function get_count_pages(int $lots_count, int $per_page): int
+{
+    if ($per_page < 0) {
+        echo "Количество позиций на странице не может быть отрицательным";
+        die();
+    }
+
+    return ceil($lots_count / $per_page);
 }

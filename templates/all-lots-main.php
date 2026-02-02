@@ -9,10 +9,8 @@
 </nav>
 <div class="container">
     <section class="lots">
-        <h2>Результаты поиска по запросу «<span><?= htmlspecialchars($search_string) ?></span>»</h2>
-        <?php if (!count($lots)): ?>
-            <span>Ничего не найдено по вашему запросу</span>
-        <?php else: ?>
+        <h2>Все лоты в категории <span>«<?= htmlspecialchars($category_title) ?>»</span></h2>
+        <?php if ($lots_count > 0): ?>
             <ul class="lots__list">
                 <?php foreach ($lots as $lot): ?>
                     <?php $time_left = calculate_time_difference($lot['date']) ?>
@@ -44,6 +42,8 @@
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
+        <?php else: ?>
+            <p>Ничего не найдено</p>
         <?php endif; ?>
     </section>
 
@@ -51,7 +51,7 @@
         <ul class="pagination-list">
             <?php if ($current_page > 1): ?>
                 <li class="pagination-item pagination-item-prev">
-                    <a href="/search.php?search=<?= urlencode($search_string) ?>&find=Найти&page=<?= htmlspecialchars($current_page) - 1 ?>">Назад</a>
+                    <a href="/all-lots.php?category=<?= htmlspecialchars($category_id) ?>&page=<?= htmlspecialchars($current_page) - 1 ?>">Назад</a>
                 </li>
             <?php else: ?>
                 <li class="pagination-item pagination-item-prev pagination-item-disabled">
@@ -61,13 +61,13 @@
 
             <?php for ($page = 1; $page <= $total_pages; $page++): ?>
                 <li class="pagination-item <?= ($page === $current_page) ? 'pagination-item-active' : '' ?>">
-                    <a href="/search.php?search=<?= urlencode($search_string) ?>&find=Найти&page=<?= htmlspecialchars($page) ?>"><?= htmlspecialchars($page) ?></a>
+                    <a href="/all-lots.php?category=<?= htmlspecialchars($category_id) ?>&page=<?= htmlspecialchars($page) ?>"><?= htmlspecialchars($page) ?></a>
                 </li>
             <?php endfor; ?>
 
             <?php if ($current_page < $total_pages): ?>
                 <li class="pagination-item pagination-item-next">
-                    <a href="/search.php?search=<?= urlencode($search_string) ?>&find=Найти&page=<?= htmlspecialchars($current_page) + 1 ?>">Вперед</a>
+                    <a href="/all-lots.php?category=<?= htmlspecialchars($category_id) ?>&page=<?= htmlspecialchars($current_page) + 1 ?>">Вперед</a>
                 </li>
             <?php else: ?>
                 <li class="pagination-item pagination-item-next pagination-item-disabled">

@@ -4,7 +4,6 @@ date_default_timezone_set('Europe/Moscow');
 
 require_once('./utils/helpers.php');
 require_once('./utils/functions.php');
-require_once('./utils/data.php');
 require_once('./utils/db.php');
 require_once('./repository/sql-lot.php');
 require_once('./repository/sql-categories.php');
@@ -30,7 +29,7 @@ if (!isset($_GET['id'])) {
 
 // получение лота по id
 
-$lot_id  = filter_input(INPUT_GET, 'id');
+$lot_id  = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $lot = get_lot($con, $lot_id);
 
 // проверка существования лота с необходимым id
@@ -107,7 +106,7 @@ $page_content = include_template('lot-main.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => 'Лоты',
+    'title' => "Просмотр лота {$lot['title']}",
     'is_auth' => $is_auth,
     'user_name' => $user_name,
     'categories' => $categories,
