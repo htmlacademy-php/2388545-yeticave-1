@@ -30,7 +30,7 @@ $page_content = include_template('my-bets-main.php', [
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => 'Главная',
+    'title' => 'Мои ставки',
     'is_auth' => $is_auth,
     'user_name' => $user_name,
     'categories' => $categories,

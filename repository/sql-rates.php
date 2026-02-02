@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Получает все ставки для указанного лота
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param int $lot_id id лота
+ *
+ * @return array<int, array{
+ *     id: int,
+ *     date: string,
+ *     cost: int,
+ *     login: string
+ * }> Массив ставок
+ */
 function get_all_rates(mysqli $con, int $lot_id)
 {
     $sql_rates = <<<SQL
@@ -25,6 +38,21 @@ function get_all_rates(mysqli $con, int $lot_id)
     return $all_rates;
 }
 
+/**
+ * Получает последнюю ставку для указанного лота
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param int $lot_id id лота
+ *
+ * @return array{
+ *     id: int,
+ *     lot_id: int,
+ *     cost: int,
+ *     user_id: int,
+ *     email: string,
+ *     login: string
+ * }|null Последняя ставка или null, если ставок нет
+ */
 function get_last_rate(mysqli $con, int $lot_id)
 {
     $sql_rates = <<<SQL
@@ -51,6 +79,16 @@ function get_last_rate(mysqli $con, int $lot_id)
     return $last_rate;
 }
 
+/**
+ * Записывает новую ставку на лот в БД
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param $form_fields Данные формы ставки
+ * @param int $user_id id пользователя, делающего ставку
+ * @param int $lot_id id лота
+ *
+ * @return void
+ */
 function add_rate(mysqli $con, array $form_fields, $user_id, $lot_id)
 {
     $cost = $form_fields['cost'];
@@ -64,24 +102,55 @@ function add_rate(mysqli $con, array $form_fields, $user_id, $lot_id)
     mysqli_stmt_execute($stmt_rate);
 }
 
+/**
+ * Получает последние ставки пользователя по каждому лоту
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param int $user_id id пользователя
+ *
+ * @return array<int, array{
+ *     lot_id: int,
+ *     lot_name: string,
+ *     lot_end_date: string,
+ *     winner_id: int|null,
+ *     img: string,
+ *     contact: string,
+ *     category: string,
+ *     cost: int,
+ *     rate_date: string
+ * }> Массив последних ставок пользователя, сгруппированных по лотам
+ */
 function get_all_rates_by_user(mysqli $con, int $user_id)
 {
     $sql_rates = <<<SQL
-        SELECT l.id as lot_id, l.name as lot_name, l.end_date as lot_end_date, l.winner_id, l.img, u.contact, c.name as category, r.cost, r.date as rate_date
-        FROM rates r
+        SELECT
+            l.id as lot_id,
+            l.name as lot_name,
+            l.end_date as lot_end_date,
+            l.winner_id,
+            l.img,
+            u.contact,
+            c.name as category,
+            r.cost,
+            r.date as rate_date
+        FROM (
+            SELECT
+                lot_id,
+                MAX(date) as max_date
+            FROM rates
+            WHERE user_id = ?
+            GROUP BY lot_id
+        ) last_r
+        JOIN rates r ON r.lot_id = last_r.lot_id
+            AND r.date = last_r.max_date
+            AND r.user_id = ?
         JOIN lots l ON r.lot_id = l.id
         JOIN users u ON l.user_id = u.id
         JOIN categories c ON l.category_id = c.id
-        WHERE r.date = (
-            SELECT MAX(r2.date)
-            FROM rates r2
-            WHERE r2.lot_id = l.id
-            AND r2.user_id = r.user_id
-        ) AND r.user_id = ?
         ORDER BY r.date DESC
     SQL;
 
-    $stmt_rates = db_get_prepare_stmt($con, $sql_rates, [$user_id]);
+    $stmt_rates = db_get_prepare_stmt($con, $sql_rates, [$user_id, $user_id]);
     mysqli_stmt_execute($stmt_rates);
 
     $result_rates = mysqli_stmt_get_result($stmt_rates);

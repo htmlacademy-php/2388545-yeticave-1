@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Добавляет нового пользователя в БД
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param $form_fields Данные формы регистрации пользователя
+ *
+ * @return void
+ */
 function add_user(mysqli $con, array $form_fields)
 {
     $user_email = $form_fields['email'];

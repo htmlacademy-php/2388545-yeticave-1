@@ -2,7 +2,7 @@
     <ul class="nav__list container">
         <?php foreach ($categories as $category): ?>
             <li class="nav__item">
-                <a href="all-lots.html"><?= htmlspecialchars($category['name']) ?></a>
+                <a href="all-lots.php?category=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
             </li>
         <?php endforeach; ?>
     </ul>
@@ -46,12 +46,34 @@
             </ul>
         <?php endif; ?>
     </section>
-    <ul class="pagination-list">
-        <li class="pagination-item pagination-item-prev"><a>Назад</a></li>
-        <li class="pagination-item pagination-item-active"><a>1</a></li>
-        <li class="pagination-item"><a href="#">2</a></li>
-        <li class="pagination-item"><a href="#">3</a></li>
-        <li class="pagination-item"><a href="#">4</a></li>
-        <li class="pagination-item pagination-item-next"><a href="#">Вперед</a></li>
-    </ul>
+
+    <?php if ($total_pages > 1): ?>
+        <ul class="pagination-list">
+            <?php if ($current_page > 1): ?>
+                <li class="pagination-item pagination-item-prev">
+                    <a href="/search.php?search=<?= urlencode($search_string) ?>&find=Найти&page=<?= htmlspecialchars($current_page) - 1 ?>">Назад</a>
+                </li>
+            <?php else: ?>
+                <li class="pagination-item pagination-item-prev pagination-item-disabled">
+                    <a>Назад</a>
+                </li>
+            <?php endif; ?>
+
+            <?php for ($page = 1; $page <= $total_pages; $page++): ?>
+                <li class="pagination-item <?= ($page === $current_page) ? 'pagination-item-active' : '' ?>">
+                    <a href="/search.php?search=<?= urlencode($search_string) ?>&find=Найти&page=<?= htmlspecialchars($page) ?>"><?= htmlspecialchars($page) ?></a>
+                </li>
+            <?php endfor; ?>
+
+            <?php if ($current_page < $total_pages): ?>
+                <li class="pagination-item pagination-item-next">
+                    <a href="/search.php?search=<?= urlencode($search_string) ?>&find=Найти&page=<?= htmlspecialchars($current_page) + 1 ?>">Вперед</a>
+                </li>
+            <?php else: ?>
+                <li class="pagination-item pagination-item-next pagination-item-disabled">
+                    <a>Вперед</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    <?php endif; ?>
 </div>
