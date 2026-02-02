@@ -63,3 +63,35 @@ function add_rate(mysqli $con, array $form_fields, $user_id, $lot_id)
     $stmt_rate = db_get_prepare_stmt($con, $sql_rates_insert, [$cost, $user_id, $lot_id]);
     mysqli_stmt_execute($stmt_rate);
 }
+
+function get_all_rates_by_user(mysqli $con, int $user_id)
+{
+    $sql_rates = <<<SQL
+        SELECT l.id as lot_id, l.name as lot_name, l.end_date as lot_end_date, l.winner_id, l.img, u.contact, c.name as category, r.cost, r.date as rate_date
+        FROM rates r
+        JOIN lots l ON r.lot_id = l.id
+        JOIN users u ON l.user_id = u.id
+        JOIN categories c ON l.category_id = c.id
+        WHERE r.date = (
+            SELECT MAX(r2.date)
+            FROM rates r2
+            WHERE r2.lot_id = l.id
+            AND r2.user_id = r.user_id
+        ) AND r.user_id = ?
+        ORDER BY r.date DESC
+    SQL;
+
+    $stmt_rates = db_get_prepare_stmt($con, $sql_rates, [$user_id]);
+    mysqli_stmt_execute($stmt_rates);
+
+    $result_rates = mysqli_stmt_get_result($stmt_rates);
+
+    if (!$result_rates) {
+        echo "Произошла ошибка MySQL";
+        die();
+    }
+
+    $all_rates = mysqli_fetch_all($result_rates, MYSQLI_ASSOC);
+
+    return $all_rates;
+}

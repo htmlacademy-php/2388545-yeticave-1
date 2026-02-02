@@ -5,15 +5,15 @@
  *
  * @param mysqli $con Объект подключения к базе данных MySQLi
  *
- * @return array Массив лотов в формате ассоциативных массивов.
- *               Каждый лот содержит поля:
- *               - id (int) - идентификатор лота
- *               - title (string) - название лота
- *               - price (int|float) - начальная цена
- *               - img (string) - путь к изображению
- *               - date (string) - дата окончания торгов
- *               - category (string) - название категории
- *               - start_date (string) - дата создания лота
+ * @return array<int, array{
+ *     id: int,
+ *     title: string,
+ *     price: int|float,
+ *     img: string,
+ *     date: string,
+ *     category: string,
+ *     start_date: string
+ * }>
  */
 function get_lots(mysqli $con)
 {

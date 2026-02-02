@@ -15,6 +15,7 @@ $user_name = $_SESSION['username'] ?? null;
 $errors = [];
 $form_fields = [];
 $is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
+$intended_param = isset($_GET['intended']) ? '?intended=' . urlencode($_GET['intended']) : '';
 
 // проверка отправки формы
 
@@ -50,6 +51,7 @@ if (!$is_form_send || $errors !== null) {
         'categories' => $categories,
         'errors' => $errors,
         'form_fields' => $form_fields,
+        'intended_param' => $intended_param,
     ]);
 
     $layout_content = include_template('layout.php', [
@@ -69,6 +71,12 @@ $user_data = get_existing_data($con, $form_fields['email'], 'users', 'email');
 
 $_SESSION['username'] = $user_data['login'];
 $_SESSION['user_id'] = $user_data['id'];
+
+if (isset($_GET['intended'])) {
+    $intended_url = $_GET['intended'];
+    header("Location: " . $intended_url);
+    exit;
+}
 
 header("Location: /");
 exit();
