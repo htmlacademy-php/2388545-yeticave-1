@@ -15,7 +15,7 @@
  *     start_date: string
  * }>
  */
-function get_lots(mysqli $con)
+function get_lots(mysqli $con): array
 {
     $sql_lots = <<<SQL
         SELECT l.id, l.name as title, l.start_price as price, l.img, l.end_date as date, c.name as category, l.start_date
@@ -48,7 +48,7 @@ function get_lots(mysqli $con)
  *     name: string
  * }> Массив лотов
  */
-function get_expired_lots(mysqli $con)
+function get_expired_lots(mysqli $con): array
 {
     $sql_lots = <<<SQL
         SELECT id, name
@@ -76,7 +76,7 @@ function get_expired_lots(mysqli $con)
  *
  * @return int Количество активных лотов в категории
  */
-function get_count_lots_by_category(mysqli $con, int $category_id)
+function get_count_lots_by_category(mysqli $con, int $category_id): int
 {
     $sql_lots = <<<SQL
         SELECT COUNT(*) as total
@@ -121,7 +121,7 @@ function get_count_lots_by_category(mysqli $con, int $category_id)
  *     start_date: string
  * }> Массив лотов категории
  */
-function get_lots_by_category(mysqli $con, int $category_id, int $per_page, int $current_page)
+function get_lots_by_category(mysqli $con, int $category_id, int $per_page, int $current_page): array
 {
     $offset = ($current_page - 1) * $per_page;
 
@@ -158,7 +158,7 @@ function get_lots_by_category(mysqli $con, int $category_id, int $per_page, int 
  *
  * @return int Количество найденных активных лотов
  */
-function get_count_search_lots(mysqli $con, string $search_string)
+function get_count_search_lots(mysqli $con, string $search_string): int
 {
     $sql_lots = <<<SQL
         SELECT COUNT(*) as total
@@ -205,7 +205,7 @@ function get_count_search_lots(mysqli $con, string $search_string)
  *     start_date: string
  * }> Массив найденных лотов
  */
-function search_lots(mysqli $con, string $search_string, int $per_page, int $current_page)
+function search_lots(mysqli $con, string $search_string, int $per_page, int $current_page): array
 {
     $offset = ($current_page - 1) * $per_page;
 

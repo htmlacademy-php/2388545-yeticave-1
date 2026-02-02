@@ -8,7 +8,7 @@
  *
  * @return void
  */
-function add_user(mysqli $con, array $form_fields)
+function add_user(mysqli $con, array $form_fields): void
 {
     $user_email = $form_fields['email'];
     $user_login = $form_fields['name'];

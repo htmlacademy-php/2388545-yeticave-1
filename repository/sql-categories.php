@@ -10,7 +10,7 @@
  *     slug: string
  * }>
  */
-function get_categories(mysqli $con)
+function get_categories(mysqli $con): array
 {
     $sql_categories = <<<SQL
         SELECT id, name, slug
@@ -37,7 +37,7 @@ function get_categories(mysqli $con)
  *
  * @return int|null id категории или null, если категория не найдена
  */
-function find_category_by_slug(mysqli $con, string $slug)
+function find_category_by_slug(mysqli $con, string $slug): ?int
 {
     $sql_category_id = <<<SQL
         SELECT id

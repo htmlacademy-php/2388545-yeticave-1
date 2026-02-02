@@ -20,7 +20,7 @@ require_once('./utils/init-session.php');
  *     category: string
  * }|null Ассоциативный массив с данными лота или null, если лот не найден
  */
-function get_lot(mysqli $con, int $lot_id)
+function get_lot(mysqli $con, int $lot_id): ?array
 {
     $sql_lot = <<<SQL
         SELECT l.id, l.name as title, l.start_price as price, l.step, l.img, l.description, l.end_date as date, c.name as category
@@ -53,7 +53,7 @@ function get_lot(mysqli $con, int $lot_id)
  *
  * @return int id созданного лота
  */
-function add_lot(mysqli $con, array $form_fields, $user_id)
+function add_lot(mysqli $con, array $form_fields, $user_id): int
 {
     $lot_name = $form_fields['lot-name'];
     $lot_description = $form_fields['message'];
@@ -85,7 +85,7 @@ function add_lot(mysqli $con, array $form_fields, $user_id)
  *
  * @return void
  */
-function add_winner_into_lot(mysqli $con, int $lot_id, int $user_id)
+function add_winner_into_lot(mysqli $con, int $lot_id, int $user_id): void
 {
     $sql_lots_update = <<<SQL
         UPDATE lots

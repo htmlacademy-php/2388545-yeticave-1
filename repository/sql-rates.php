@@ -13,7 +13,7 @@
  *     login: string
  * }> Массив ставок
  */
-function get_all_rates(mysqli $con, int $lot_id)
+function get_all_rates(mysqli $con, int $lot_id): array
 {
     $sql_rates = <<<SQL
         SELECT r.id, r.date, r.cost, u.login
@@ -53,7 +53,7 @@ function get_all_rates(mysqli $con, int $lot_id)
  *     login: string
  * }|null Последняя ставка или null, если ставок нет
  */
-function get_last_rate(mysqli $con, int $lot_id)
+function get_last_rate(mysqli $con, int $lot_id): ?array
 {
     $sql_rates = <<<SQL
         SELECT r.id, r.lot_id, r.cost, r.user_id, u.email, u.login
@@ -89,7 +89,7 @@ function get_last_rate(mysqli $con, int $lot_id)
  *
  * @return void
  */
-function add_rate(mysqli $con, array $form_fields, $user_id, $lot_id)
+function add_rate(mysqli $con, array $form_fields, $user_id, $lot_id): void
 {
     $cost = $form_fields['cost'];
 
@@ -120,7 +120,7 @@ function add_rate(mysqli $con, array $form_fields, $user_id, $lot_id)
  *     rate_date: string
  * }> Массив последних ставок пользователя, сгруппированных по лотам
  */
-function get_all_rates_by_user(mysqli $con, int $user_id)
+function get_all_rates_by_user(mysqli $con, int $user_id): array
 {
     $sql_rates = <<<SQL
         SELECT
