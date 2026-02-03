@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title><?= $title ?></title>
+    <title><?= htmlspecialchars($title) ?></title>
     <link href="../css/normalize.min.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
 </head>
@@ -21,19 +21,19 @@
                     <input type="search" name="search" placeholder="Поиск лота">
                     <input class="main-header__search-btn" type="submit" name="find" value="Найти">
                 </form>
-                <?php if ($is_auth): ?>
+                <?php if ($is_auth) : ?>
                     <a class="main-header__add-lot button" href="./../add.php">Добавить лот</a>
                 <?php endif; ?>
 
                 <nav class="user-menu">
 
-                    <?php if ($is_auth): ?>
+                    <?php if ($is_auth) : ?>
                         <div class="user-menu__logged">
                             <p><?= htmlspecialchars($user_name) ?></p>
                             <a class="user-menu__bets" href="my-bets.php">Мои ставки</a>
                             <a class="user-menu__logout" href="logout.php">Выход</a>
                         </div>
-                    <?php else: ?>
+                    <?php else : ?>
                         <ul class="user-menu__list">
                             <li class="user-menu__item">
                                 <a href="./../register.php">Регистрация</a>
@@ -54,9 +54,9 @@
     <footer class="main-footer">
         <nav class="nav">
             <ul class="nav__list container">
-                <?php foreach ($categories as $category): ?>
+                <?php foreach ($categories as $category) : ?>
                     <li class="nav__item">
-                        <a href="all-lots.php?category=<?= htmlspecialchars($category['id']) ?>"><?= htmlspecialchars($category['name']) ?></a>
+                        <a href="all-lots.php?category=<?= htmlspecialchars($category['id'] ?? '') ?>"><?= htmlspecialchars($category['name'] ?? '') ?></a>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -100,7 +100,7 @@
                     </svg>
                 </a>
             </div>
-            <?php if ($is_auth): ?>
+            <?php if ($is_auth) : ?>
                 <a class="main-footer__add-lot button" href="./../add.php">Добавить лот</a>
             <?php endif; ?>
             <div class="main-footer__developed-by">

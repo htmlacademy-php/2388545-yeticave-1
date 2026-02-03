@@ -90,7 +90,7 @@ function validate(array $form_fields, array $rules, mysqli $con): ?array
                 $parameteres = explode(PARAMETERES_SPLIT_DELIMITER, $rule_array[0]);
             }
 
-            $errorMessage = $callable($field_name, $form_fields[$field_name] ?? null, $form_fields, $con, ...$parameteres);
+            $errorMessage = $callable($form_fields[$field_name] ?? null, $form_fields, $con, ...$parameteres);
 
             if ($errorMessage !== null) {
                 $errors[$field_name] = $errorMessage;
@@ -112,7 +112,7 @@ function validate(array $form_fields, array $rules, mysqli $con): ?array
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_required(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_required(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if (empty($value)) {
         return "Поле необходимо заполнить";
@@ -132,7 +132,7 @@ function validate_required(string $field_name, mixed $value, array $form_fields,
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_select_not_default(string $field_name, mixed $value, array $form_fields, mysqli $con, string $default_value, ...$args): ?string
+function validate_select_not_default(mixed $value, array $form_fields, mysqli $con, string $default_value, ...$args): ?string
 {
     if ($value === $default_value) {
         return "Выберите один из вариантов";
@@ -151,7 +151,7 @@ function validate_select_not_default(string $field_name, mixed $value, array $fo
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_positive_number(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_positive_number(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -174,7 +174,7 @@ function validate_positive_number(string $field_name, mixed $value, array $form_
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_int(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_int(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -197,7 +197,7 @@ function validate_int(string $field_name, mixed $value, array $form_fields, mysq
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_string(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_string(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -220,7 +220,7 @@ function validate_string(string $field_name, mixed $value, array $form_fields, m
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_date_format(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_date_format(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -245,7 +245,7 @@ function validate_date_format(string $field_name, mixed $value, array $form_fiel
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_date_after_tomorrow(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_date_after_tomorrow(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -271,7 +271,7 @@ function validate_date_after_tomorrow(string $field_name, mixed $value, array $f
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_required_img(string $field_name, mixed $uploaded_file, array $form_fields, mysqli $con, ...$args): ?string
+function validate_required_img(mixed $uploaded_file, array $form_fields, mysqli $con, ...$args): ?string
 {
     if (empty($uploaded_file['name'])) {
         return "Загрузите изображение";
@@ -290,7 +290,7 @@ function validate_required_img(string $field_name, mixed $uploaded_file, array $
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_img_format(string $field_name, mixed $uploaded_file, array $form_fields, mysqli $con, ...$args): ?string
+function validate_img_format(mixed $uploaded_file, array $form_fields, mysqli $con, ...$args): ?string
 {
     if (empty($uploaded_file['name'])) {
         return null;
@@ -328,7 +328,7 @@ function validate_img_format(string $field_name, mixed $uploaded_file, array $fo
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_email(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_email(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -352,7 +352,7 @@ function validate_email(string $field_name, mixed $value, array $form_fields, my
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_min_length(string $field_name, mixed $value, array $form_fields, mysqli $con, string $min_length, ...$args): ?string
+function validate_min_length(mixed $value, array $form_fields, mysqli $con, string $min_length, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -380,7 +380,7 @@ function validate_min_length(string $field_name, mixed $value, array $form_field
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_min_int(string $field_name, mixed $value, array $form_fields, mysqli $con, int $min_value, ...$args): ?string
+function validate_min_int(mixed $value, array $form_fields, mysqli $con, int $min_value, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -407,7 +407,7 @@ function validate_min_int(string $field_name, mixed $value, array $form_fields, 
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_unique(string $field_name, mixed $value, array $form_fields, mysqli $con, string $table_name, string $column_name, ...$args): ?string
+function validate_unique(mixed $value, array $form_fields, mysqli $con, string $table_name, string $column_name, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -438,7 +438,7 @@ function validate_unique(string $field_name, mixed $value, array $form_fields, m
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_exist(string $field_name, mixed $value, array $form_fields, mysqli $con, string $table_name, string $column_name, ...$args): ?string
+function validate_exist(mixed $value, array $form_fields, mysqli $con, string $table_name, string $column_name, ...$args): ?string
 {
     if ($value === null) {
         return null;
@@ -469,7 +469,7 @@ function validate_exist(string $field_name, mixed $value, array $form_fields, my
  * @param [type] ...$args прочие параметры
  * @return string|null текст ошибки либо null
  */
-function validate_password(string $field_name, mixed $value, array $form_fields, mysqli $con, ...$args): ?string
+function validate_password(mixed $value, array $form_fields, mysqli $con, ...$args): ?string
 {
     if ($value === null) {
         return null;

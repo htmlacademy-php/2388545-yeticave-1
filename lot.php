@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @var mysqli $con
+ */
+
 date_default_timezone_set('Europe/Moscow');
 
 require_once('./utils/helpers.php');
@@ -64,7 +68,6 @@ $min_rate = $current_price + $price_step;
 // Проверка отправки формы
 
 if ($is_form_send) {
-
     // извлечение и очистка значений из формы
 
     $form_fields = filter_input_array(
@@ -87,7 +90,7 @@ if ($is_form_send) {
 
     // запись в БД при отсутствии значений и обновление цены
 
-    if ($errors === NULL) {
+    if ($errors === null) {
         add_rate($con, $form_fields, $user_id, $lot_id);
         $rate_history = get_all_rates($con, $lot_id);
         $index = array_key_first($rate_history);

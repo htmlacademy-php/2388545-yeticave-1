@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @var mysqli $con
+ */
+
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
@@ -24,7 +28,10 @@ if (empty($lots)) {
 
 foreach ($lots as $lot) {
     $last_rate_info = get_last_rate($con, $lot['id']);
-    if ($last_rate_info === NULL) continue;
+
+    if ($last_rate_info === null) {
+        continue;
+    }
 
     // запись победителя в БД
 
