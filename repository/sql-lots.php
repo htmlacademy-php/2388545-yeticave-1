@@ -26,16 +26,7 @@ function get_lots(mysqli $con): array
         LIMIT 6
     SQL;
 
-    $result_lots = mysqli_query($con, $sql_lots);
-
-    if (!$result_lots) {
-        echo "Произошла ошибка MySQL";
-        die();
-    }
-
-    $lots = mysqli_fetch_all($result_lots, MYSQLI_ASSOC);
-
-    return $lots;
+    return get_sql_result_without_params($con, $sql_lots);
 }
 
 /**
@@ -56,16 +47,7 @@ function get_expired_lots(mysqli $con): array
         WHERE end_date <= NOW() AND winner_id is NULL
     SQL;
 
-    $result_lots = mysqli_query($con, $sql_lots);
-
-    if (!$result_lots) {
-        echo "Произошла ошибка MySQL";
-        die();
-    }
-
-    $lots = mysqli_fetch_all($result_lots, MYSQLI_ASSOC);
-
-    return $lots;
+    return get_sql_result_without_params($con, $sql_lots);
 }
 
 /**
@@ -85,22 +67,9 @@ function get_count_lots_by_category(mysqli $con, int $category_id): int
         WHERE l.end_date > NOW() AND c.id = ?
     SQL;
 
-    $stmt_lots = db_get_prepare_stmt($con, $sql_lots, [$category_id]);
-    mysqli_stmt_execute($stmt_lots);
-    $result_lots = mysqli_stmt_get_result($stmt_lots);
+    $row = get_sql_result_with_params($con, $sql_lots, [$category_id], 'assoc');
 
-    if (!$result_lots) {
-        echo "Произошла ошибка MySQL";
-        die();
-    }
-
-    $row = mysqli_fetch_assoc($result_lots);
-
-    if ($row === NULL) {
-        return 0;
-    }
-
-    return (int) $row['total'];
+    return $row ? (int) $row['total'] : 0;
 }
 
 /**
@@ -135,19 +104,7 @@ function get_lots_by_category(mysqli $con, int $category_id, int $per_page, int 
         OFFSET ?
     SQL;
 
-    $stmt_lots = db_get_prepare_stmt($con, $sql_lots, [$category_id, $per_page, $offset]);
-    mysqli_stmt_execute($stmt_lots);
-
-    $result_lots = mysqli_stmt_get_result($stmt_lots);
-
-    if (!$result_lots) {
-        echo "Произошла ошибка MySQL";
-        die();
-    }
-
-    $lots = mysqli_fetch_all($result_lots, MYSQLI_ASSOC);
-
-    return $lots;
+    return get_sql_result_with_params($con, $sql_lots, [$category_id, $per_page, $offset], 'all');
 }
 
 /**
@@ -168,23 +125,9 @@ function get_count_search_lots(mysqli $con, string $search_string): int
         AND MATCH(l.name,l.description) AGAINST(?)
     SQL;
 
-    $stmt_lots = db_get_prepare_stmt($con, $sql_lots, [$search_string]);
-    mysqli_stmt_execute($stmt_lots);
+    $row = get_sql_result_with_params($con, $sql_lots, [$search_string], 'assoc');
 
-    $result_lots = mysqli_stmt_get_result($stmt_lots);
-
-    if (!$result_lots) {
-        echo "Произошла ошибка MySQL";
-        die();
-    }
-
-    $row = mysqli_fetch_assoc($result_lots);
-
-    if ($row === NULL) {
-        return 0;
-    }
-
-    return (int) $row['total'];
+    return $row ? (int) $row['total'] : 0;
 }
 
 /**
@@ -220,17 +163,5 @@ function search_lots(mysqli $con, string $search_string, int $per_page, int $cur
         OFFSET ?
     SQL;
 
-    $stmt_lots = db_get_prepare_stmt($con, $sql_lots, [$search_string, $per_page, $offset]);
-    mysqli_stmt_execute($stmt_lots);
-
-    $result_lots = mysqli_stmt_get_result($stmt_lots);
-
-    if (!$result_lots) {
-        echo "Произошла ошибка MySQL";
-        die();
-    }
-
-    $found_lots = mysqli_fetch_all($result_lots, MYSQLI_ASSOC);
-
-    return $found_lots;
+    return get_sql_result_with_params($con, $sql_lots, [$search_string, $per_page, $offset], 'all');
 }

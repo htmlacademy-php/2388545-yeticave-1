@@ -21,24 +21,24 @@
             <p class="lot-item__description"><?= htmlspecialchars($lot['description']) ?></p>
         </div>
         <div class="lot-item__right">
-            <?php if ($is_auth): ?>
-                <div class="lot-item__state">
-                    <div class="lot-item__timer timer <?= htmlspecialchars($timer_class) ?>">
-                        <?php if ((int)$time_left[0] < 0): ?>
-                            00 : 00
-                        <?php else: ?>
-                            <?= htmlspecialchars($formatted_time_left[0]) . " : " . htmlspecialchars($formatted_time_left[1]) ?>
-                        <?php endif; ?>
+            <div class="lot-item__state">
+                <div class="lot-item__timer timer <?= htmlspecialchars($timer_class) ?>">
+                    <?php if ((int)$time_left[0] < 0): ?>
+                        00 : 00
+                    <?php else: ?>
+                        <?= htmlspecialchars($formatted_time_left[0]) . " : " . htmlspecialchars($formatted_time_left[1]) ?>
+                    <?php endif; ?>
+                </div>
+                <div class="lot-item__cost-state">
+                    <div class="lot-item__rate">
+                        <span class="lot-item__amount">Текущая цена</span>
+                        <span class="lot-item__cost"><?= htmlspecialchars($current_price) ?></span>
                     </div>
-                    <div class="lot-item__cost-state">
-                        <div class="lot-item__rate">
-                            <span class="lot-item__amount">Текущая цена</span>
-                            <span class="lot-item__cost"><?= htmlspecialchars($current_price) ?></span>
-                        </div>
-                        <div class="lot-item__min-cost">
-                            Мин. ставка <span><?= htmlspecialchars($lot['price']) ?></span>
-                        </div>
+                    <div class="lot-item__min-cost">
+                        Мин. ставка <span><?= htmlspecialchars($min_rate) ?></span>
                     </div>
+                </div>
+                <?php if ($is_auth && (int)$time_left[0] > 0 && $user_id !== $lot['user_id'] && $user_id !== $last_rate_user_id): ?>
                     <form class="lot-item__form" action="lot.php?id=<?= htmlspecialchars($lot['id']) ?>" method="post" autocomplete="off">
                         <p class="lot-item__form-item form__item <?= !empty($errors['cost']) ? 'form__item--invalid' : '' ?>">
                             <label for="cost">Ваша ставка</label>
@@ -47,8 +47,8 @@
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </div>
             <div class="history">
                 <h3>История ставок
                     <?php if (count($rate_history)): ?>

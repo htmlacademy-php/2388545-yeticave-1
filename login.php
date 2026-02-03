@@ -65,7 +65,7 @@ if (!$is_form_send || $errors !== null) {
     print($layout_content);
 
     exit();
-};
+}
 
 $user_data = get_existing_data($con, $form_fields['email'], 'users', 'email');
 

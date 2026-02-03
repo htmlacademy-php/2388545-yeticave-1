@@ -21,11 +21,5 @@ function get_existing_data(mysqli $con, mixed $value, string $table_name, string
         LIMIT 1
     SQL;
 
-    $stmt = db_get_prepare_stmt($con, $sql_existing_data, [$value]);
-    mysqli_stmt_execute($stmt);
-
-    $existing_data = mysqli_stmt_get_result($stmt);
-    $existing_row = mysqli_fetch_assoc($existing_data);
-
-    return $existing_row;
+    return get_sql_result_with_params($con, $sql_existing_data, [$value], 'assoc');
 }

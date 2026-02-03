@@ -14,7 +14,7 @@ require_once('./utils/init-session.php');
 $categories = get_categories($con);
 $is_auth = isset($_SESSION['username']);
 $user_name = $_SESSION['username'] ?? null;
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'] ?? null;
 
 $errors = [];
 $form_fields = [];
@@ -42,6 +42,10 @@ if ($lot === null) {
 // получение истории ставок
 
 $rate_history = get_all_rates($con, $lot_id);
+
+// получение id пользователя, сделавшего последнюю ставку
+
+$last_rate_user_id = $rate_history[0]['user_id'] ?? null;
 
 // вычисление текущей цены
 
@@ -89,6 +93,7 @@ if ($is_form_send) {
         $index = array_key_first($rate_history);
         $current_price = $rate_history[$index]['cost'] ?? $lot['price'];
         $min_rate = $current_price + $price_step;
+        $last_rate_user_id = $rate_history[$index]['user_id'] ?? null;
     }
 }
 
@@ -98,6 +103,8 @@ $page_content = include_template('lot-main.php', [
     'categories' => $categories,
     'lot' => $lot,
     'is_auth' => $is_auth,
+    'user_id' => $user_id,
+    'last_rate_user_id' => $last_rate_user_id,
     'rate_history' => $rate_history,
     'current_price' => $current_price,
     'min_rate' => $min_rate,
