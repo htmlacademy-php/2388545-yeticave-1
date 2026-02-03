@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @var mysqli $con
+ */
+
 require_once('./utils/helpers.php');
 require_once('./utils/functions.php');
 require_once('./utils/db.php');
@@ -13,7 +17,6 @@ $is_form_send = $_SERVER['REQUEST_METHOD'] === 'GET';
 // проверка отправки формы
 
 if ($is_form_send) {
-
     // извлечение и очистка значений из формы
 
     $search_string = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_FULL_SPECIAL_CHARS);

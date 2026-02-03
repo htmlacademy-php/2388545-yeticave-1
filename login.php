@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @var mysqli $con
+ */
+
 require_once('./utils/helpers.php');
 require_once('./utils/functions.php');
 require_once('./utils/db.php');
@@ -20,7 +24,6 @@ $intended_param = isset($_GET['intended']) ? '?intended=' . urlencode($_GET['int
 // проверка отправки формы
 
 if ($is_form_send) {
-
     // извлечение и очистка значений из формы
 
     $form_fields = filter_input_array(
@@ -65,7 +68,7 @@ if (!$is_form_send || $errors !== null) {
     print($layout_content);
 
     exit();
-};
+}
 
 $user_data = get_existing_data($con, $form_fields['email'], 'users', 'email');
 

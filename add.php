@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @var mysqli $con
+ */
+
 require_once('./utils/helpers.php');
 require_once('./utils/functions.php');
 require_once('./utils/db.php');
@@ -25,7 +29,6 @@ if (!isset($_SESSION['username'])) {
 // проверка отправки формы
 
 if ($is_form_send) {
-
     // извлечение и очистка значений из формы
 
     $form_fields = filter_input_array(

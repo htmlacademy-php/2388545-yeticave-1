@@ -123,3 +123,52 @@ function get_count_pages(int $lots_count, int $per_page): int
 
     return ceil($lots_count / $per_page);
 }
+
+/**
+ * Выполняет SQL-запрос без входящих параметров и возвращает все строки результата
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param string $sql SQL-запрос для выполнения
+ *
+ * @return array<int, array<string, mixed>> Все строки результата запроса в виде массива ассоциативных массивов
+ */
+function get_sql_result_without_params(mysqli $con, string $sql): array
+{
+    $result = mysqli_query($con, $sql);
+
+    if (!$result) {
+        echo "Произошла ошибка MySQL";
+        die();
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+/**
+ * Выполняет параметризованный SQL-запрос и возвращает результат в указанном формате
+ *
+ * @param mysqli $con Объект подключения к базе данных MySQLi
+ * @param string $sql SQL-запрос с плейсхолдерами (?)
+ * @param array $params Параметры для подстановки в запрос
+ * @param string $data_fetch_method Метод получения данных: 'assoc' для одной строки, иначе все строки
+ *
+ * @return array<string, mixed>|array<int, array<string, mixed>> Одна строка в виде ассоциативного массива или массив всех строк, или null если ничего не найдено
+ */
+function get_sql_result_with_params(mysqli $con, string $sql, array $params, string $data_fetch_method): ?array
+{
+    $stmt = db_get_prepare_stmt($con, $sql, $params);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        echo "Произошла ошибка MySQL";
+        die();
+    }
+
+    if ($data_fetch_method === 'assoc') {
+        return mysqli_fetch_assoc($result);
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
