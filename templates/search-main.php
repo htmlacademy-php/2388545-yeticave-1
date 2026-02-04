@@ -15,8 +15,8 @@
         <?php else : ?>
             <ul class="lots__list">
                 <?php foreach ($lots as $lot) : ?>
-                    <?php $time_left = calculate_time_difference($lot['date'] ?? '') ?>
-                    <?php $formatted_time_left = format_time_difference($time_left) ?>
+                    <?php $time_left = isset($lot['date']) ? calculate_time_difference($lot['date']) : 0 ?>
+                    <?php $formatted_time_left = (isset($time_left) && is_array($time_left)) ? format_time_difference($time_left) : ['00', '00'] ?>
                     <?php $timer_class = (int)($time_left[0] ?? 0) < 1 ? "timer--finishing" : ""; ?>
                     <?php if ((int)($time_left[0] ?? 0) >= 0) : ?>
                         <li class="lots__item lot">
@@ -29,7 +29,7 @@
                                 <div class="lot__state">
                                     <div class="lot__rate">
                                         <span class="lot__amount">Стартовая цена</span>
-                                        <span class="lot__cost"><?= format_price($lot['price'] ?? 0) ?></span>
+                                        <span class="lot__cost"><?= isset($lot['price']) ? format_price($lot['price']) : 0 ?></span>
                                     </div>
                                     <div class="lot__timer timer <?= htmlspecialchars($timer_class) ?>">
                                         <?php if ((int)($time_left[0] ?? 0) < 0) : ?>

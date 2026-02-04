@@ -8,8 +8,7 @@
     </ul>
 </nav>
 <section class="lot-item container">
-    <?php $time_left = calculate_time_difference($lot['date'] ?? '') ?>
-    <?php $formatted_time_left = format_time_difference($time_left) ?>
+    <?php $formatted_time_left = (isset($time_left) && is_array($time_left)) ? format_time_difference($time_left) : ['00', '00'] ?>
     <?php $timer_class = (int)($time_left[0] ?? 0) < 1 ? "timer--finishing" : ""; ?>
     <h2><?= htmlspecialchars($lot['title'] ?? '') ?></h2>
     <div class="lot-item__content">
@@ -38,12 +37,13 @@
                         Мин. ставка <span><?= htmlspecialchars($min_rate) ?></span>
                     </div>
                 </div>
-                <?php if ($is_auth && (int)($time_left[0] ?? 0) > 0 && $user_id !== ($lot['user_id'] ?? '') && $user_id !== $last_rate_user_id) : ?>
+                <?php if ($can_user_make_rate) : ?>
                     <form class="lot-item__form" action="lot.php?id=<?= htmlspecialchars($lot['id'] ?? '') ?>" method="post" autocomplete="off">
-                        <p class="lot-item__form-item form__item <?= !empty($errors['cost']) ? 'form__item--invalid' : '' ?>">
+                        <p class="lot-item__form-item form__item <?= (!empty($errors['cost']) || ($restriction !== null)) ? 'form__item--invalid' : '' ?>">
                             <label for="cost">Ваша ставка</label>
                             <input id="cost" type="text" name="cost" placeholder="<?= htmlspecialchars($min_rate) ?>">
                             <span class="form__error"><?= htmlspecialchars($errors['cost'] ?? '') ?></span>
+                            <span class="form__error"><?= htmlspecialchars($restriction ?? '') ?></span>
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>

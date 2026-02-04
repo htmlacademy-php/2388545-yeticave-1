@@ -13,8 +13,8 @@
         <?php if ($lots_count > 0) : ?>
             <ul class="lots__list">
                 <?php foreach ($lots as $lot) : ?>
-                    <?php $time_left = calculate_time_difference($lot['date'] ?? '') ?>
-                    <?php $formatted_time_left = format_time_difference($time_left) ?>
+                    <?php $time_left = isset($lot['date']) ? calculate_time_difference($lot['date']) : 0 ?>
+                    <?php $formatted_time_left = (isset($time_left) && is_array($time_left)) ? format_time_difference($time_left) : ['00', '00'] ?>
                     <?php $timer_class = (int)$time_left[0] < 1 ? "timer--finishing" : ""; ?>
                     <?php if ((int)$time_left[0] >= 0) : ?>
                         <li class="lots__item lot">
