@@ -13,6 +13,7 @@ require_once('./repository/sql-categories.php');
 require_once('./utils/init-session.php');
 
 $is_form_send = $_SERVER['REQUEST_METHOD'] === 'GET';
+$search_string = '';
 
 // проверка отправки формы
 

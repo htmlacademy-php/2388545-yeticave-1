@@ -20,6 +20,7 @@ $is_auth = isset($_SESSION['username']);
 $user_name = $_SESSION['username'] ?? null;
 $user_id = $_SESSION['user_id'] ?? null;
 
+$restriction = null;
 $errors = [];
 $form_fields = [];
 $is_form_send = $_SERVER['REQUEST_METHOD'] === 'POST';
@@ -51,18 +52,32 @@ $rate_history = get_all_rates($con, $lot_id);
 
 $last_rate_user_id = $rate_history[0]['user_id'] ?? null;
 
+// проверка связей пользователя с лотом
+
+$is_user_last_rate = $user_id === $last_rate_user_id;
+$is_user_lot_author = $user_id === ($lot['user_id'] ?? 0);
+
+// проверка активности лота
+
+$time_left = isset($lot['date']) ? calculate_time_difference($lot['date']) : 0;
+$is_lot_expired = (($time_left[0] ?? 0) < 0 || (($time_left[0] ?? 0) === 0 && ($time_left[1] ?? 0) <= 0));
+
+// проверка ограничений ввода ставок
+
+$can_user_make_rate = $is_auth && !$is_lot_expired && !$is_user_last_rate && !$is_user_lot_author;
+
 // вычисление текущей цены
 
-$current_price = $lot['price'];
+$current_price = $lot['price'] ?? 0;
 
 if (count($rate_history)) {
     $index = array_key_first($rate_history);
-    $current_price = $rate_history[$index]['cost'] ?? $lot['price'];
+    $current_price = $rate_history[$index]['cost'] ?? $lot['price'] ?? 0;
 }
 
 // вычисление минимальной ставки
 
-$price_step = $lot['step'];
+$price_step = $lot['step'] ?? 0;
 $min_rate = $current_price + $price_step;
 
 // Проверка отправки формы
@@ -88,15 +103,23 @@ if ($is_form_send) {
 
     $errors = validate($form_fields, $rules, $con);
 
-    // запись в БД при отсутствии значений и обновление цены
+    // проверка наличия ограничений добавления ставки
 
-    if ($errors === null) {
+    if (!$can_user_make_rate) {
+        $restriction = 'Отсутствует возможность добавления ставки';
+    }
+
+    // запись в БД при отсутствии ошибок и ограничений и обновление данных
+
+    if ($errors === null && $restriction === null) {
         add_rate($con, $form_fields, $user_id, $lot_id);
         $rate_history = get_all_rates($con, $lot_id);
         $index = array_key_first($rate_history);
-        $current_price = $rate_history[$index]['cost'] ?? $lot['price'];
+        $current_price = $rate_history[$index]['cost'] ?? $lot['price'] ?? 0;
         $min_rate = $current_price + $price_step;
         $last_rate_user_id = $rate_history[$index]['user_id'] ?? null;
+        $is_user_last_rate = $user_id === $last_rate_user_id;
+        $can_user_make_rate = $is_auth && !$is_lot_expired && !$is_user_last_rate && !$is_user_lot_author;
     }
 }
 
@@ -112,11 +135,14 @@ $page_content = include_template('lot-main.php', [
     'current_price' => $current_price,
     'min_rate' => $min_rate,
     'errors' => $errors,
+    'restriction' => $restriction,
+    'can_user_make_rate' => $can_user_make_rate,
+    'time_left' => $time_left,
 ]);
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => "Просмотр лота {$lot['title']}",
+    'title' => "Просмотр лота " . ($lot['title'] ?? ''),
     'is_auth' => $is_auth,
     'user_name' => $user_name,
     'categories' => $categories,

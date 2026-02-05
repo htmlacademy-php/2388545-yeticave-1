@@ -11,8 +11,8 @@
     <h2>Мои ставки</h2>
     <table class="rates__list">
         <?php foreach ($rates as $rate) : ?>
-            <?php $time_left = calculate_time_difference($rate['lot_end_date'] ?? '') ?>
-            <?php $formatted_time_left = format_time_difference($time_left) ?>
+            <?php $time_left = isset($rate['lot_end_date']) ? calculate_time_difference($rate['lot_end_date']) : 0 ?>
+            <?php $formatted_time_left = (isset($time_left) && is_array($time_left)) ? format_time_difference($time_left) : ['00', '00'] ?>
             <?php $timer_class = (int)($time_left[0] ?? 0) < 1 ? "timer--finishing" : ""; ?>
 
             <?php if ($user_id === ($rate['winner_id'] ?? '')) : ?>
@@ -53,7 +53,7 @@
                     <?= htmlspecialchars($rate['cost'] ?? '') ?> р
                 </td>
                 <td class="rates__time">
-                    <?= calculate_past_date($rate['rate_date'] ?? '') ?>
+                    <?= isset($rate['rate_date']) ? calculate_past_date($rate['rate_date']) : '' ?>
                 </td>
             </tr>
         <?php endforeach; ?>
