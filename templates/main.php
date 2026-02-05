@@ -33,11 +33,7 @@
                                     <span class="lot__cost"><?= format_price($lot['price'] ?? 0) ?></span>
                                 </div>
                                 <div class="lot__timer timer <?= htmlspecialchars($timer_class) ?>">
-                                    <?php if ((int)($time_left[0] ?? 0) < 0) : ?>
-                                        00 : 00
-                                    <?php else : ?>
-                                        <?= htmlspecialchars($formatted_time_left[0] ?? 0) . " : " . htmlspecialchars($formatted_time_left[1] ?? 0) ?>
-                                    <?php endif; ?>
+                                    <?= htmlspecialchars($formatted_time_left[0] ?? 0) . " : " . htmlspecialchars($formatted_time_left[1] ?? 0) ?>
                                 </div>
                             </div>
                         </div>

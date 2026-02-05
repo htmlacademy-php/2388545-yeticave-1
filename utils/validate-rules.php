@@ -105,7 +105,6 @@ function validate(array $form_fields, array $rules, mysqli $con): ?array
 /**
  * Проверяет заполненность поля
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -124,7 +123,6 @@ function validate_required(mixed $value, array $form_fields, mysqli $con, ...$ar
 /**
  * Проверяет, что селект был выбран
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -144,7 +142,6 @@ function validate_select_not_default(mixed $value, array $form_fields, mysqli $c
 /**
  * Проверяет, что значение является неотрицательным числом
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -167,7 +164,6 @@ function validate_positive_number(mixed $value, array $form_fields, mysqli $con,
 /**
  * Проверяет, что значение является целым числом
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -190,7 +186,6 @@ function validate_int(mixed $value, array $form_fields, mysqli $con, ...$args): 
 /**
  * Проверяет, что значение является строкой
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -213,7 +208,6 @@ function validate_string(mixed $value, array $form_fields, mysqli $con, ...$args
 /**
  * Проверяет, что дата отправлена в верном формате
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -238,7 +232,6 @@ function validate_date_format(mixed $value, array $form_fields, mysqli $con, ...
 /**
  * Проверяет, что дата больше текущей минимум на 1 день
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -264,7 +257,6 @@ function validate_date_after_tomorrow(mixed $value, array $form_fields, mysqli $
 /**
  * Проверяет наличие изображения
  *
- * @param string $field_name название поля
  * @param mixed $value структура файла с изображением
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -283,7 +275,6 @@ function validate_required_img(mixed $uploaded_file, array $form_fields, mysqli 
 /**
  * Проверяет формат изображения
  *
- * @param string $field_name название поля
  * @param mixed $uploaded_file структура файла с изображением
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -321,7 +312,6 @@ function validate_img_format(mixed $uploaded_file, array $form_fields, mysqli $c
 /**
  * Проверяет формат email
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -344,7 +334,6 @@ function validate_email(mixed $value, array $form_fields, mysqli $con, ...$args)
 /**
  * Проверяет минимальную длину строки
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -372,7 +361,6 @@ function validate_min_length(mixed $value, array $form_fields, mysqli $con, stri
 /**
  * Проверяет минимальное значение числа
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -398,7 +386,6 @@ function validate_min_int(mixed $value, array $form_fields, mysqli $con, int $mi
 /**
  * Проверяет уникальность значения
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -429,7 +416,6 @@ function validate_unique(mixed $value, array $form_fields, mysqli $con, string $
 /**
  * Проверяет уникальность значения
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
@@ -460,7 +446,6 @@ function validate_exist(mixed $value, array $form_fields, mysqli $con, string $t
 /**
  * Проверяет совпадение пароля
  *
- * @param string $field_name название поля
  * @param mixed $value значение поля
  * @param array $form_fields массив полей формы
  * @param mysqli $con sql connection
